@@ -151,18 +151,24 @@ jobs:
           } > "$CHANGELOG_FILE"
           echo "has_updates=true" >> "$GITHUB_OUTPUT"
 
-      - name: Commit changelog
+      - name: Commit and push changelog
         if: steps.changelog.outputs.has_updates == 'true' && steps.version.outputs.run_job == 'true'
-        env:
-          NEXT_TAG: ${{ steps.version.outputs.next_tag }}
-          TARGET_BRANCH: ${{ steps.version.outputs.target_branch }}
         run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
           git add CHANGELOG
-          git commit -m "docs: update changelog for ${NEXT_TAG}"
-          git push origin HEAD:"$TARGET_BRANCH"
+          git commit -m "docs: update changelog for ${{ steps.version.outputs.next_tag }}" || echo "Nada novo para comitar"
+          git push https://x-access-token:${{ secrets.PAT }}@github.com/${{ github.repository }} HEAD --force-with-lease
+
+      - name: Create Pull Request
+        if: steps.changelog.outputs.has_updates == 'true' && steps.version.outputs.run_job == 'true'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.PAT }}
+          branch: ${{ env.BRANCH_NAME }}
+          delete-branch: true
+          title: "docs: update changelog for ${{ steps.version.outputs.next_tag }}"
+          body: "Este PR foi gerado automaticamente para atualizar o changelog."
+          base: ${{ steps.version.outputs.target_branch }}
+          labels: documentation
 
       - name: Create and push tag
         if: steps.changelog.outputs.has_updates == 'true' && steps.version.outputs.run_job == 'true'
