@@ -95,19 +95,21 @@ jobs:
           echo "has_updates=true" >> "$GITHUB_OUTPUT"
 
       - name: Create changelog branch and push
-        if: steps.changelog.outputs.has_updates == 'true' && steps.version.outputs.run_job == 'true'
-        env:
-          NEXT_TAG: ${{ steps.version.outputs.next_tag }}
-        run: |
-          set -euo pipefail
-          BRANCH_NAME="changelog-update-${NEXT_TAG}"
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git checkout -b "$BRANCH_NAME"
-          git add CHANGELOG
-          git commit -m "docs: update changelog for ${NEXT_TAG}"
-          git push https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }} "$BRANCH_NAME"
-
+  if: steps.changelog.outputs.has_updates == 'true' && steps.version.outputs.run_job == 'true'
+  env:
+    NEXT_TAG: ${{ steps.version.outputs.next_tag }}
+    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  run: |
+    set -euo pipefail
+    BRANCH_NAME="changelog-update-${NEXT_TAG}"
+    git config user.name "github-actions[bot]"
+    git config user.email "github-actions[bot]@users.noreply.github.com"
+    git fetch origin "$BRANCH_NAME" || true
+    git checkout -b "$BRANCH_NAME" || git checkout "$BRANCH_NAME"
+    git rebase origin/"$BRANCH_NAME" || true
+    git add CHANGELOG
+    git commit -m "docs: update changelog for ${NEXT_TAG}" || echo "Nada novo para comitar"
+    git push https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }} "$BRANCH_NAME" --force
       - name: Create Pull Request
         if: steps.changelog.outputs.has_updates == 'true' && steps.version.outputs.run_job == 'true'
         uses: peter-evans/create-pull-request@v5
