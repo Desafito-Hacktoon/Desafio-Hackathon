@@ -23,6 +23,9 @@ permissions:
   actions: write
   pull-requests: write
 
+env:
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 jobs:
   tag-develop:
     if: github.actor != 'github-actions[bot]' && (github.event_name != 'pull_request' || github.event.pull_request.merged == true)
@@ -91,27 +94,30 @@ jobs:
           } > "$CHANGELOG_FILE"
           echo "has_updates=true" >> "$GITHUB_OUTPUT"
 
-      - name: Commit changelog (local only)
+      - name: Create changelog branch and push
         if: steps.changelog.outputs.has_updates == 'true' && steps.version.outputs.run_job == 'true'
+        env:
+          NEXT_TAG: ${{ steps.version.outputs.next_tag }}
         run: |
+          set -euo pipefail
+          BRANCH_NAME="changelog-update-${NEXT_TAG}"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH_NAME"
           git add CHANGELOG
-          git commit -m "docs: update changelog for ${{ steps.version.outputs.next_tag }}"
+          git commit -m "docs: update changelog for ${NEXT_TAG}"
+          git push https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }} "$BRANCH_NAME"
 
-      - name: Create Pull Request with changelog
+      - name: Create Pull Request
         if: steps.changelog.outputs.has_updates == 'true' && steps.version.outputs.run_job == 'true'
         uses: peter-evans/create-pull-request@v5
         with:
-          token: ${{ secrets.PAT }}
-          commit-message: "docs: update changelog for ${{ steps.version.outputs.next_tag }}"
+          token: ${{ secrets.GITHUB_TOKEN }}
           branch: changelog-update-${{ steps.version.outputs.next_tag }}
           title: "docs: update changelog for ${{ steps.version.outputs.next_tag }}"
           body: "Este PR foi gerado automaticamente para atualizar o changelog."
           base: ${{ steps.version.outputs.target_branch }}
           labels: documentation
-          add-paths: |
-            CHANGELOG
 
       - name: Create and push tag
         if: steps.changelog.outputs.has_updates == 'true' && steps.version.outputs.run_job == 'true'
@@ -121,4 +127,4 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git tag -a "$NEXT_TAG" -m "Tag automatica gerada"
-          git push origin "$NEXT_TAG" 
+          git push origin "$NEXT_TAG"
