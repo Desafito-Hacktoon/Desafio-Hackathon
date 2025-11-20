@@ -118,7 +118,7 @@ jobs:
               fi
               NEXT_PATCH=$((LAST_PATCH + 1))
             fi
-            NEXT_TAG="v${NEXT_MAJOR}.0.${NEXT_TAG}"
+            NEXT_TAG="v${NEXT_MAJOR}.0.${NEXT_PATCH}"
           fi
           
           echo "last_tag=${LAST_GLOBAL_TAG}" >> "$GITHUB_OUTPUT"
