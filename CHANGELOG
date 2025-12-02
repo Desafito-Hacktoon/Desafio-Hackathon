@@ -1,5 +1,13 @@
 # Changelog
 
+## v2.0.2 - 2025-12-02
+
+- Merge pull request #64 from Desafito-Hacktoon/feat/001-docker
+- Resolve conflito modify/delete no ../Backend/dockerfile, aceitando a exclusão da feature branch.
+- 	renamed:    ../Backend/dockerfile -> dockerfile
+- adicinado novo dockerfile no backend C#
+
+
 ## v1.0.10 - 2025-11-20
 
 - Merge pull request #54 from Desafito-Hacktoon/hotfix/001-workflow
