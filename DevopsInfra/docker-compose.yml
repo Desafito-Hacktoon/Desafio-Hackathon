@@ -36,8 +36,8 @@ services:
 
   backend-java-core:
     build:
-      context: ./services/java-core
-      dockerfile: Dockerfile
+      context: ../java-core
+      dockerfile: ./Dockerfile.java
     container_name: backend-java-core
     restart: unless-stopped
     environment:
@@ -55,8 +55,8 @@ services:
 
   backend-csharp-geo:
     build:
-      context: ./services/geo-engine
-      dockerfile: Dockerfile
+      context: ../geo-engine
+      dockerfile: ./Dockerfile.csharp
     container_name: backend-csharp-geo
     restart: unless-stopped
     environment:
@@ -69,8 +69,8 @@ services:
 
   frontend-angular:
     build:
-      context: ./services/web-angular
-      dockerfile: Dockerfile
+      context: ../web-angular
+      dockerfile: ./Dockerfile.angular
     container_name: frontend-angular
     restart: unless-stopped
     ports:
