@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.0.6 - 2025-12-02
+
+- Merge pull request #76 from Desafito-Hacktoon/feat/001-docker
+- 	renamed:    docker-compose -> docker-compose.yml 	renamed:    ../App-Flutter/dockerfile -> dockerfile.angular 	renamed:    ../Backend-C#/dockerfile -> dockerfile.csharp 	renamed:    ../Back-Java/dockerfile -> dockerfile.java
+
+
 ## v1.0.10 - 2025-11-20
 
 - Merge pull request #54 from Desafito-Hacktoon/hotfix/001-workflow
