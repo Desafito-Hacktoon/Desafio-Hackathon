@@ -40,6 +40,15 @@ services:
     volumes:
       - pgadmin_data:/var/lib/pgadmin
 
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
   backend-java-core:
     build:
       context: ../java-core
@@ -91,3 +100,5 @@ services:
 volumes:
   pg_data:
   pgadmin_data:
+  redis_data:
+
