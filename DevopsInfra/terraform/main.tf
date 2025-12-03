@@ -172,7 +172,7 @@ resource "aws_instance" "BluLabs_server" {
 
     # Clonar repositório
     cd /home/ubuntu
-    git clone https://github.com/Desafito-Hacktoon/Desafio-Hackathon.git
+    git clone -b develop https://github.com/Desafito-Hacktoon/Desafio-Hackathon.git
        
   EOF
 
@@ -181,7 +181,7 @@ resource "aws_instance" "BluLabs_server" {
     source      = "DevopsInfra/.env"
     destination = "/home/ubuntu/Desafio-Hackathon/DevopsInfra/.env"
   }
-  
+
 
   # Executa os comandos do Docker Compose já com o .env presente
   provisioner "remote-exec" {
