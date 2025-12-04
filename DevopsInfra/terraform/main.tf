@@ -94,6 +94,14 @@ resource "aws_security_group" "BluLabs_sg" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+  # Redis
+  ingress {
+    from_port   = 6379
+    to_port     = 6379
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
 
   # Backend Java
   ingress {
@@ -126,7 +134,7 @@ resource "aws_security_group" "BluLabs_sg" {
     description = "All outbound"
     from_port   = 0
     to_port     = 0
-    protocol    = "-1"
+    protocol    = "-1" 
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
@@ -164,12 +172,36 @@ resource "aws_instance" "BluLabs_server" {
 
     # Clonar repositório
     cd /home/ubuntu
-    git clone https://github.com/Desafito-Hacktoon/Desafio-Hackathon.git
-    cd Desafio-Hackathon
-
-    # Subir containers
-    docker-compose up -d
+    git clone -b develop https://github.com/Desafito-Hacktoon/Desafio-Hackathon.git
+       
   EOF
+
+  # Copia o .env da sua máquina para dentro da EC2
+  provisioner "file" {
+    source      = "../.env"
+    destination = "/home/ubuntu/.env"
+  }
+
+
+  # Executa os comandos do Docker Compose já com o .env presente
+  provisioner "remote-exec" {
+  inline = [
+    "while [ ! -d /home/ubuntu/Desafio-Hackathon/DevopsInfra ]; do sleep 2; done",
+    "if [ -f /home/ubuntu/.env ]; then sudo mv /home/ubuntu/.env /home/ubuntu/Desafio-Hackathon/DevopsInfra/.env; else echo 'Arquivo .env não encontrado'; fi",
+    "cd /home/ubuntu/Desafio-Hackathon/DevopsInfra",
+    "sudo docker-compose pull",
+    "sudo docker-compose up --build -d"
+  ]
+}
+
+  # Conexão SSH para os provisioners
+  connection {
+    type        = "ssh"
+    user        = "ubuntu"
+    private_key = file("~/.ssh/id_rsa")
+    host        = self.public_ip
+  }
+
 
   tags = {
     Name        = "BluLabs-server"
