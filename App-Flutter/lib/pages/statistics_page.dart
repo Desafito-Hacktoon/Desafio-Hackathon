@@ -56,7 +56,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        backgroundColor: const Color(0xFF1E3A5F),
+        backgroundColor: const Color(0xFF135CE4),
         foregroundColor: Colors.white,
         title: const Text('Estatísticas'),
         elevation: 0,
@@ -96,14 +96,14 @@ class _StatisticsPageState extends State<StatisticsPage> {
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFF1E3A5F), Color(0xFF2E5A8F)],
+          colors: [Color(0xFF135CE4), Color(0xFF3F7AEE)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF1E3A5F).withValues(alpha: 0.3),
+            color: const Color(0xFF135CE4).withValues(alpha: 0.3),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -202,7 +202,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
         style: const TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
-          color: Color(0xFF1E3A5F),
+          color: Color(0xFF135CE4),
         ),
       ),
     );
