@@ -175,4 +175,37 @@
       <z-pie-chart [chartData]="pieData3" [chartOptions]="pieOptions3" />
     </z-card>
   </div>
+
+  <z-card zTitle="Ocorrências por Período" class="mt-6">
+    <div class="mb-4 p-3 bg-gray-50 rounded-lg border">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 items-end">
+        <div class="space-y-1">
+          <label class="text-sm font-medium text-gray-600">Data Início</label>
+          <z-date-picker [value]="dataInicio()" (dateChange)="onDataInicioChange($event)"
+            placeholder="Selecione a data inicial" zFormat="dd/MM/yyyy" zSize="default" class="w-full text-sm" />
+        </div>
+
+        <div class="space-y-1">
+          <label class="text-sm font-medium text-gray-600">Data Fim</label>
+          <z-date-picker [value]="dataFim()" (dateChange)="onDataFimChange($event)" placeholder="Selecione a data final"
+            zFormat="dd/MM/yyyy" zSize="default" [minDate]="dataInicio()" class="w-full text-sm" />
+        </div>
+
+        <div class="flex items-end h-full">
+          <button z-button zSize="sm" (click)="onPeriodoChange()"
+            class="!bg-black !text-white hover:!bg-gray-800 !border-0 w-full">
+            Atualizar Gráfico
+          </button>
+        </div>
+      </div>
+    </div>
+
+    @if (lineChartData) {
+    <z-line-chart [chartData]="lineChartData" [chartOptions]="lineChartOptions" />
+    } @else {
+    <div class="h-[400px] flex items-center justify-center text-gray-500">
+      Carregando gráfico...
+    </div>
+    }
+  </z-card>
 </div>

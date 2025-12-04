@@ -19,6 +19,8 @@ import {ZardSelectItemComponent} from '@shared/components/select/select-item.com
 import {ZardButtonComponent} from '@shared/components/button/button.component';
 import {ZardCardComponent} from '@shared/components/card/card.component';
 import {ZardPieChartComponent} from '@shared/components/chart/pie-chart.component';
+import {ZardLineChartComponent, LineChartData} from '@shared/components/chart/line-chart.component';
+import {ZardDatePickerComponent} from '@shared/components/date-picker/date-picker.component';
 import {Router} from '@angular/router';
 import {FormsModule} from '@angular/forms';
 
@@ -41,6 +43,8 @@ import {FormsModule} from '@angular/forms';
     ZardButtonComponent,
     ZardCardComponent,
     ZardPieChartComponent,
+    ZardLineChartComponent,
+    ZardDatePickerComponent,
   ],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css'],
@@ -66,6 +70,14 @@ export class Dashboard implements OnInit {
 
   pieData3!: Piechart;
   pieOptions3: any;
+  
+  // Gráfico de linha - Ocorrências por dia
+  lineChartData!: LineChartData;
+  lineChartOptions: any;
+  
+  // Filtros de período para o gráfico de linha
+  dataInicio = signal<Date | null>(null);
+  dataFim = signal<Date | null>(null);
   
   // Opções para os selects
   statusOptions = ['ABERTO', 'EM_ANDAMENTO', 'FECHADO'];
@@ -95,6 +107,15 @@ export class Dashboard implements OnInit {
       });
       
       this.ocorrenciasOriginais.set(ocorrenciasFiltradas);
+      
+      // Inicializar período padrão (últimos 30 dias)
+      const dataFim = new Date();
+      const dataInicio = new Date();
+      dataInicio.setDate(dataInicio.getDate() - 30);
+      
+      this.dataFim.set(dataFim);
+      this.dataInicio.set(dataInicio);
+      
       this.aplicarFiltros();
       this.atualizarGraficos();
     });
@@ -132,6 +153,7 @@ export class Dashboard implements OnInit {
     
     this.ocorrencias.set(ocorrenciasFiltradas);
     this.currentPage.set(1);
+    this.atualizarGraficos();
   }
 
   onStatusChange(value: string | string[]) {
@@ -225,6 +247,148 @@ export class Dashboard implements OnInit {
 
     this.pieData3 = this.gerarPieData(status, ['#009688', '#f44335', '#ffc107']);
     this.pieOptions3 = this.gerarPieOptions();
+    
+    this.atualizarGraficoLinha();
+  }
+  
+  atualizarGraficoLinha() {
+    const dataInicio = this.dataInicio();
+    const dataFim = this.dataFim();
+    
+    let ocorrenciasFiltradas = [...this.ocorrenciasOriginais()];
+    
+    if (dataInicio) {
+      ocorrenciasFiltradas = ocorrenciasFiltradas.filter(oc => {
+        const dataCriacao = new Date(oc.dataCriacao);
+        return dataCriacao >= dataInicio;
+      });
+    }
+    
+    if (dataFim) {
+      const fimComHora = new Date(dataFim);
+      fimComHora.setHours(23, 59, 59, 999); // Incluir o dia inteiro
+      ocorrenciasFiltradas = ocorrenciasFiltradas.filter(oc => {
+        const dataCriacao = new Date(oc.dataCriacao);
+        return dataCriacao <= fimComHora;
+      });
+    }
+    
+    const ocorrenciasPorDia = ocorrenciasFiltradas.reduce((acc, oc) => {
+      const dataCriacao = new Date(oc.dataCriacao);
+      const dataFormatada = this.formatarData(dataCriacao);
+      acc[dataFormatada] = (acc[dataFormatada] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+    
+    const todasAsDatas: string[] = [];
+    if (dataInicio && dataFim) {
+      const dataAtual = new Date(dataInicio);
+      const fim = new Date(dataFim);
+      
+      while (dataAtual <= fim) {
+        todasAsDatas.push(this.formatarData(new Date(dataAtual)));
+        dataAtual.setDate(dataAtual.getDate() + 1);
+      }
+    } else {
+      // Se não houver período definido, usar todas as datas das ocorrências
+      const datasUnicas = Object.keys(ocorrenciasPorDia).sort();
+      todasAsDatas.push(...datasUnicas);
+    }
+    
+    const labels = todasAsDatas.map(data => {
+      const [dia, mes, ano] = data.split('/');
+      return `${dia}/${mes}`;
+    });
+    
+    const dados = todasAsDatas.map(data => ocorrenciasPorDia[data] || 0);
+    
+    this.lineChartData = {
+      labels,
+      datasets: [
+        {
+          label: 'Ocorrências',
+          data: dados,
+          borderColor: '#3B82F6',
+          backgroundColor: 'rgba(59, 130, 246, 0.1)',
+          fill: true,
+          tension: 0.4,
+        },
+      ],
+    };
+    
+    this.lineChartOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top',
+        },
+        tooltip: {
+          mode: 'index',
+          intersect: false,
+          callbacks: {
+            title: (context: any) => {
+              const index = context[0].dataIndex;
+              return todasAsDatas[index];
+            },
+            label: (context: any) => {
+              return `${context.dataset.label}: ${context.parsed.y} ocorrência(s)`;
+            },
+          },
+        },
+      },
+      scales: {
+        x: {
+          display: true,
+          title: {
+            display: true,
+            text: 'Data',
+          },
+          grid: {
+            display: false,
+          },
+        },
+        y: {
+          display: true,
+          title: {
+            display: true,
+            text: 'Quantidade de Ocorrências',
+          },
+          beginAtZero: true,
+          ticks: {
+            stepSize: 1,
+            precision: 0,
+          },
+        },
+      },
+      interaction: {
+        mode: 'nearest',
+        axis: 'x',
+        intersect: false,
+      },
+    };
+  }
+  
+  formatarData(data: Date): string {
+    const dia = String(data.getDate()).padStart(2, '0');
+    const mes = String(data.getMonth() + 1).padStart(2, '0');
+    const ano = data.getFullYear();
+    return `${dia}/${mes}/${ano}`;
+  }
+  
+  onPeriodoChange() {
+    this.atualizarGraficoLinha();
+  }
+  
+  onDataInicioChange(date: Date | null) {
+    this.dataInicio.set(date);
+    this.onPeriodoChange();
+  }
+  
+  onDataFimChange(date: Date | null) {
+    this.dataFim.set(date);
+    this.onPeriodoChange();
   }
 
     private gerarPieData(obj: Record<string, number>, color:string[]):Piechart{
