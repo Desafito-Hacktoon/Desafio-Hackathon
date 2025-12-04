@@ -1,16 +1,61 @@
-<ul class="divide-y divide-gray-200 border border-gray-300 rounded">
-  @for (o of ocorrencias; track o.id) {
-    <li class="p-4 hover:bg-gray-50">
-      <a [routerLink]="['/ocorrencias', o.id]" class="font-bold text-blue-600 hover:underline">
-        {{ o.tipoProblema }}
-      </a>
-      <div class="text-gray-700">{{ o.descricao }}</div>
-      <div class="text-sm text-gray-500">
-        {{ o.bairro }} - {{ o.endereco }}
-      </div>
-      <div class="text-xs text-gray-400">
-        Gravidade: {{ o.gravidade }} | Status: {{ o.status }}
-      </div>
-    </li>
+<div class="space-y-4">
+  <table z-table class="w-full">
+    <thead z-table-header>
+      <tr z-table-row>
+        <th z-table-head>Tipo de Problema</th>
+        <th z-table-head>Descrição</th>
+        <th z-table-head>Localização</th>
+        <th z-table-head>Gravidade</th>
+        <th z-table-head>Status</th>
+        <th z-table-head>Secretaria</th>
+      </tr>
+    </thead>
+    <tbody z-table-body>
+      @for (ocorrencia of paginatedOcorrencias(); track ocorrencia.id) {
+      <tr z-table-row class="cursor-pointer hover:bg-gray-50" (click)="navigateToDetail(ocorrencia.id)">
+        <td z-table-cell class="font-medium">
+          {{ ocorrencia.tipoProblema }}
+        </td>
+        <td z-table-cell class="max-w-xs truncate">
+          {{ ocorrencia.descricao }}
+        </td>
+        <td z-table-cell>
+          <div class="text-sm">
+            <div>{{ ocorrencia.bairro }}</div>
+            <div class="text-gray-500 text-xs">{{ ocorrencia.endereco }}</div>
+          </div>
+        </td>
+        <td z-table-cell>
+          <span class="px-2 py-1 text-xs rounded-full" [class]="ocorrencia.gravidade >= 7 ? 'bg-red-100 text-red-800' : 
+                           ocorrencia.gravidade >= 4 ? 'bg-yellow-100 text-yellow-800' : 
+                           'bg-green-100 text-green-800'">
+            {{ ocorrencia.gravidade }}
+          </span>
+        </td>
+        <td z-table-cell>
+          <span class="px-2 py-1 text-xs rounded-full" [class]="ocorrencia.status === 'Resolvido' ? 'bg-green-100 text-green-800' :
+                           ocorrencia.status === 'Em Andamento' ? 'bg-blue-100 text-blue-800' :
+                           'bg-gray-100 text-gray-800'">
+            {{ ocorrencia.status }}
+          </span>
+        </td>
+        <td z-table-cell class="text-sm text-gray-600">
+          {{ ocorrencia.secretariaOrigem }}
+        </td>
+      </tr>
+      } @empty {
+      <tr z-table-row>
+        <td z-table-cell [attr.colspan]="6" class="text-center py-8 text-gray-500">
+          Nenhuma ocorrência encontrada
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+
+  @if (totalPages() > 1) {
+  <div class="flex justify-center">
+    <z-pagination [zPageIndex]="currentPage()" [zTotal]="totalPages()" (zPageIndexChange)="onPageChange($event)" />
+  </div>
   }
-</ul>
+</div>
