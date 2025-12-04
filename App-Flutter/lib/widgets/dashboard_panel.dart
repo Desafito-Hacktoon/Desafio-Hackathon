@@ -78,7 +78,7 @@ class DashboardPanel extends StatelessWidget {
                   icon: Icons.warning_amber_rounded,
                   value: totalProblems.toString(),
                   label: 'Total',
-                  color: const Color(0xFF1E3A5F),
+                  color: const Color(0xFF135CE4),
                 ),
               ),
               Container(width: 1, height: 40, color: Colors.grey[200]),

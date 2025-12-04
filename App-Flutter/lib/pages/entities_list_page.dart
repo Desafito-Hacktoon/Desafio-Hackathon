@@ -48,7 +48,7 @@ class _EntitiesListPageState extends State<EntitiesListPage> {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        backgroundColor: const Color(0xFF1E3A5F),
+        backgroundColor: const Color(0xFF135CE4),
         foregroundColor: Colors.white,
         title: const Text('Órgãos Responsáveis'),
         elevation: 0,
@@ -58,7 +58,7 @@ class _EntitiesListPageState extends State<EntitiesListPage> {
           Container(
             padding: const EdgeInsets.all(20),
             decoration: const BoxDecoration(
-              color: Color(0xFF1E3A5F),
+              color: Color(0xFF135CE4),
               borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
             ),
             child: Column(
@@ -109,13 +109,13 @@ class _EntitiesListPageState extends State<EntitiesListPage> {
                           selectedColor: Colors.white,
                           labelStyle: TextStyle(
                             color: isSelected
-                                ? const Color(0xFF1E3A5F)
+                                ? const Color(0xFF135CE4)
                                 : Colors.white,
                             fontWeight: isSelected
                                 ? FontWeight.bold
                                 : FontWeight.normal,
                           ),
-                          checkmarkColor: const Color(0xFF1E3A5F),
+                          checkmarkColor: const Color(0xFF135CE4),
                           side: BorderSide(
                             color: isSelected ? Colors.white : Colors.white30,
                           ),
@@ -185,12 +185,12 @@ class _EntitiesListPageState extends State<EntitiesListPage> {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF1E3A5F).withValues(alpha: 0.1),
+                    color: const Color(0xFF135CE4).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
                     _getEntityIcon(entity.id),
-                    color: const Color(0xFF1E3A5F),
+                    color: const Color(0xFF135CE4),
                     size: 28,
                   ),
                 ),
@@ -204,7 +204,7 @@ class _EntitiesListPageState extends State<EntitiesListPage> {
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFF1E3A5F),
+                          color: Color(0xFF135CE4),
                         ),
                       ),
                       Text(
@@ -294,7 +294,7 @@ class _EntitiesListPageState extends State<EntitiesListPage> {
         padding: const EdgeInsets.symmetric(vertical: 4),
         child: Row(
           children: [
-            Icon(icon, size: 18, color: color ?? const Color(0xFF1E3A5F)),
+            Icon(icon, size: 18, color: color ?? const Color(0xFF135CE4)),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
@@ -302,7 +302,7 @@ class _EntitiesListPageState extends State<EntitiesListPage> {
                 style: TextStyle(
                   fontSize: 13,
                   color: onTap != null
-                      ? const Color(0xFF1E3A5F)
+                      ? const Color(0xFF135CE4)
                       : Colors.grey[700],
                   decoration: onTap != null ? TextDecoration.underline : null,
                 ),

@@ -35,19 +35,19 @@ class FilterChipBar extends StatelessWidget {
                   Icon(
                     filter['icon'] as IconData,
                     size: 16,
-                    color: isSelected ? Colors.white : const Color(0xFF1E3A5F),
+                    color: isSelected ? Colors.white : const Color(0xFF135CE4),
                   ),
                   const SizedBox(width: 6),
                   Text(filter['label'] as String),
                 ],
               ),
               labelStyle: TextStyle(
-                color: isSelected ? Colors.white : const Color(0xFF1E3A5F),
+                color: isSelected ? Colors.white : const Color(0xFF135CE4),
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                 fontSize: 12,
               ),
               backgroundColor: Colors.white,
-              selectedColor: const Color(0xFF1E3A5F),
+              selectedColor: const Color(0xFF135CE4),
               checkmarkColor: Colors.white,
               showCheckmark: false,
               elevation: 2,
@@ -57,7 +57,7 @@ class FilterChipBar extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
                 side: BorderSide(
                   color: isSelected
-                      ? const Color(0xFF1E3A5F)
+                      ? const Color(0xFF135CE4)
                       : Colors.grey[300]!,
                 ),
               ),

@@ -115,7 +115,7 @@ class _ContactEntityPageState extends State<ContactEntityPage> {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        backgroundColor: const Color(0xFF1E3A5F),
+        backgroundColor: const Color(0xFF135CE4),
         foregroundColor: Colors.white,
         title: Text('Contatar ${widget.entity.acronym}'),
         elevation: 0,
@@ -127,7 +127,7 @@ class _ContactEntityPageState extends State<ContactEntityPage> {
               width: double.infinity,
               padding: const EdgeInsets.all(20),
               decoration: const BoxDecoration(
-                color: Color(0xFF1E3A5F),
+                color: Color(0xFF135CE4),
                 borderRadius: BorderRadius.vertical(
                   bottom: Radius.circular(24),
                 ),
@@ -150,7 +150,7 @@ class _ContactEntityPageState extends State<ContactEntityPage> {
                           ),
                           child: const Icon(
                             Icons.business,
-                            color: Color(0xFF1E3A5F),
+                            color: Color(0xFF135CE4),
                             size: 32,
                           ),
                         ),
@@ -276,7 +276,7 @@ class _ContactEntityPageState extends State<ContactEntityPage> {
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF1E3A5F),
+                        color: Color(0xFF135CE4),
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -297,7 +297,7 @@ class _ContactEntityPageState extends State<ContactEntityPage> {
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF1E3A5F),
+                        color: Color(0xFF135CE4),
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -336,7 +336,7 @@ class _ContactEntityPageState extends State<ContactEntityPage> {
                           _isSending ? 'Enviando...' : 'Enviar Mensagem',
                         ),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF1E3A5F),
+                          backgroundColor: const Color(0xFF135CE4),
                           foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                         ),

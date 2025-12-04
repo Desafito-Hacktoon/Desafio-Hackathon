@@ -205,7 +205,7 @@ class _HeatmapPageState extends State<HeatmapPage>
                     vertical: 10,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF1E3A5F),
+                    color: const Color(0xFF135CE4),
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
@@ -271,7 +271,7 @@ class _HeatmapPageState extends State<HeatmapPage>
                     ),
                     child: const Icon(
                       Icons.menu,
-                      color: Color(0xFF1E3A5F),
+                      color: Color(0xFF135CE4),
                       size: 22,
                     ),
                   ),
@@ -307,7 +307,7 @@ class _HeatmapPageState extends State<HeatmapPage>
                       value: 'entities',
                       child: Row(
                         children: [
-                          Icon(Icons.business, color: Color(0xFF1E3A5F)),
+                          Icon(Icons.business, color: Color(0xFF135CE4)),
                           SizedBox(width: 12),
                           Text('Órgãos Responsáveis'),
                         ],
@@ -317,7 +317,7 @@ class _HeatmapPageState extends State<HeatmapPage>
                       value: 'statistics',
                       child: Row(
                         children: [
-                          Icon(Icons.bar_chart, color: Color(0xFF1E3A5F)),
+                          Icon(Icons.bar_chart, color: Color(0xFF135CE4)),
                           SizedBox(width: 12),
                           Text('Estatísticas'),
                         ],
@@ -327,7 +327,7 @@ class _HeatmapPageState extends State<HeatmapPage>
                       value: 'help',
                       child: Row(
                         children: [
-                          Icon(Icons.help_outline, color: Color(0xFF1E3A5F)),
+                          Icon(Icons.help_outline, color: Color(0xFF135CE4)),
                           SizedBox(width: 12),
                           Text('Ajuda'),
                         ],
@@ -356,7 +356,7 @@ class _HeatmapPageState extends State<HeatmapPage>
         child: Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: isActive ? const Color(0xFF1E3A5F) : Colors.white,
+            color: isActive ? const Color(0xFF135CE4) : Colors.white,
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
@@ -368,7 +368,7 @@ class _HeatmapPageState extends State<HeatmapPage>
           ),
           child: Icon(
             icon,
-            color: isActive ? Colors.white : const Color(0xFF1E3A5F),
+            color: isActive ? Colors.white : const Color(0xFF135CE4),
             size: 22,
           ),
         ),
@@ -599,14 +599,14 @@ class _HeatmapPageState extends State<HeatmapPage>
           heroTag: 'refresh',
           backgroundColor: Colors.white,
           onPressed: _loadHeatmapData,
-          child: const Icon(Icons.refresh, color: Color(0xFF1E3A5F)),
+          child: const Icon(Icons.refresh, color: Color(0xFF135CE4)),
         ),
         const SizedBox(height: 8),
         FloatingActionButton.small(
           heroTag: 'center',
           backgroundColor: Colors.white,
           onPressed: () => _mapController.move(_initialPosition, _initialZoom),
-          child: const Icon(Icons.my_location, color: Color(0xFF1E3A5F)),
+          child: const Icon(Icons.my_location, color: Color(0xFF135CE4)),
         ),
       ],
     );
@@ -721,7 +721,7 @@ class ZoneDetailPage extends StatelessWidget {
                           'Contatar ${zone.responsibleEntity!.acronym}',
                         ),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF1E3A5F),
+                          backgroundColor: const Color(0xFF135CE4),
                           foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 14),
                         ),
@@ -827,7 +827,7 @@ class ZoneDetailPage extends StatelessWidget {
         style: const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.bold,
-          color: Color(0xFF1E3A5F),
+          color: Color(0xFF135CE4),
         ),
       ),
     );
@@ -855,10 +855,10 @@ class ZoneDetailPage extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: const Color(0xFF1E3A5F).withValues(alpha: 0.1),
+              color: const Color(0xFF135CE4).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(icon, color: const Color(0xFF1E3A5F)),
+            child: Icon(icon, color: const Color(0xFF135CE4)),
           ),
           const SizedBox(width: 16),
           Expanded(

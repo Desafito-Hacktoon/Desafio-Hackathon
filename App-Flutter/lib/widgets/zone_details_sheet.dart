@@ -250,7 +250,7 @@ class ZoneDetailsSheet extends StatelessWidget {
                         icon: Icons.category_outlined,
                         label: 'Categoria',
                         value: zone.typeLabel,
-                        color: const Color(0xFF1E3A5F),
+                        color: const Color(0xFF135CE4),
                       ),
                     ),
                   ],
@@ -319,7 +319,7 @@ class ZoneDetailsSheet extends StatelessWidget {
                             'Contatar ${zone.responsibleEntity!.acronym}',
                           ),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF1E3A5F),
+                            backgroundColor: const Color(0xFF135CE4),
                             foregroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(vertical: 14),
                             shape: RoundedRectangleBorder(

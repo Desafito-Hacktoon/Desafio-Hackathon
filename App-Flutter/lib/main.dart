@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF1E3A5F),
+          seedColor: const Color(0xFF135CE4),
           brightness: Brightness.light,
         ),
         appBarTheme: const AppBarTheme(
@@ -129,7 +129,7 @@ class _SplashScreenState extends State<SplashScreen>
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFF1E3A5F), Color(0xFF2E5A8F), Color(0xFF1E3A5F)],
+            colors: [Color(0xFF135CE4), Color(0xFF3F7AEE), Color(0xFF135CE4)],
           ),
         ),
         child: Center(
@@ -155,7 +155,7 @@ class _SplashScreenState extends State<SplashScreen>
                       child: const Icon(
                         Icons.map,
                         size: 60,
-                        color: Color(0xFF1E3A5F),
+                        color: Color(0xFF135CE4),
                       ),
                     ),
                   ),

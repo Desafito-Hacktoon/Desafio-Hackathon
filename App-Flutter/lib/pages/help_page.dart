@@ -9,7 +9,7 @@ class HelpPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        backgroundColor: const Color(0xFF1E3A5F),
+        backgroundColor: const Color(0xFF135CE4),
         foregroundColor: Colors.white,
         title: const Text('Ajuda'),
         elevation: 0,
@@ -50,14 +50,14 @@ class HelpPage extends StatelessWidget {
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFF1E3A5F), Color(0xFF2E5A8F)],
+          colors: [Color(0xFF135CE4), Color(0xFF3F7AEE)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF1E3A5F).withValues(alpha: 0.3),
+            color: const Color(0xFF135CE4).withValues(alpha: 0.3),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -118,7 +118,7 @@ class HelpPage extends StatelessWidget {
         style: const TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
-          color: Color(0xFF1E3A5F),
+          color: Color(0xFF135CE4),
         ),
       ),
     );
@@ -289,13 +289,13 @@ class HelpPage extends StatelessWidget {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF1E3A5F).withValues(alpha: 0.1),
+                    color: const Color(0xFF135CE4).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
                     cat['entity']!,
                     style: const TextStyle(
-                      color: Color(0xFF1E3A5F),
+                      color: Color(0xFF135CE4),
                       fontSize: 11,
                       fontWeight: FontWeight.bold,
                     ),
@@ -474,7 +474,7 @@ class HelpPage extends StatelessWidget {
                   width: 32,
                   height: 32,
                   decoration: BoxDecoration(
-                    color: const Color(0xFF1E3A5F),
+                    color: const Color(0xFF135CE4),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Center(
@@ -490,7 +490,7 @@ class HelpPage extends StatelessWidget {
                 const SizedBox(width: 16),
                 Icon(
                   item['icon'] as IconData,
-                  color: const Color(0xFF1E3A5F),
+                  color: const Color(0xFF135CE4),
                   size: 22,
                 ),
                 const SizedBox(width: 12),
@@ -543,7 +543,7 @@ class HelpPage extends StatelessWidget {
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
-                    colors: [Color(0xFF1E3A5F), Color(0xFF2E5A8F)],
+                    colors: [Color(0xFF135CE4), Color(0xFF3F7AEE)],
                   ),
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -582,12 +582,12 @@ class HelpPage extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: const Color(0xFF1E3A5F).withValues(alpha: 0.05),
+              color: const Color(0xFF135CE4).withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
               children: [
-                const Icon(Icons.info_outline, color: Color(0xFF1E3A5F)),
+                const Icon(Icons.info_outline, color: Color(0xFF135CE4)),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
