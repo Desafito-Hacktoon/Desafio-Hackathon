@@ -1,6 +1,4 @@
 import {Component, OnInit, computed, signal} from '@angular/core';
-import {ChartModule} from 'primeng/chart';
-import {CardModule} from 'primeng/card';
 import {DatePipe, NgClass, CommonModule} from '@angular/common';
 import {DashboardService} from '../dashboardService/dashboard-service';
 import {Ocorrencia} from '../../models/Ocorrencia';
@@ -20,14 +18,13 @@ import {ZardSelectComponent} from '@shared/components/select/select.component';
 import {ZardSelectItemComponent} from '@shared/components/select/select-item.component';
 import {ZardButtonComponent} from '@shared/components/button/button.component';
 import {ZardCardComponent} from '@shared/components/card/card.component';
+import {ZardPieChartComponent} from '@shared/components/chart/pie-chart.component';
 import {Router} from '@angular/router';
 import {FormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-dashboard',
   imports: [
-    ChartModule,
-    CardModule,
     DatePipe,
     CommonModule,
     FormsModule,
@@ -43,6 +40,7 @@ import {FormsModule} from '@angular/forms';
     ZardSelectItemComponent,
     ZardButtonComponent,
     ZardCardComponent,
+    ZardPieChartComponent,
   ],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css'],

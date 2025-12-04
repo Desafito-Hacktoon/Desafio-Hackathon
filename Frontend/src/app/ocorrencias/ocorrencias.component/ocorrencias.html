@@ -11,10 +11,12 @@
       </tr>
     </thead>
     <tbody z-table-body>
-      @for (ocorrencia of paginatedOcorrencias(); track ocorrencia.id) {
-      <tr z-table-row class="cursor-pointer hover:bg-gray-50" (click)="navigateToDetail(ocorrencia.id)">
+      @for (ocorrencia of ocorrencias; track ocorrencia.id) {
+      <tr z-table-row class="cursor-pointer hover:bg-gray-50">
         <td z-table-cell class="font-medium">
-          {{ ocorrencia.tipoProblema }}
+          <a [routerLink]="['/ocorrencias', ocorrencia.id]" class="text-inherit no-underline">
+            {{ ocorrencia.tipoProblema }}
+          </a>
         </td>
         <td z-table-cell class="max-w-xs truncate">
           {{ ocorrencia.descricao }}
@@ -52,10 +54,4 @@
       }
     </tbody>
   </table>
-
-  @if (totalPages() > 1) {
-  <div class="flex justify-center">
-    <z-pagination [zPageIndex]="currentPage()" [zTotal]="totalPages()" (zPageIndexChange)="onPageChange($event)" />
-  </div>
-  }
 </div>

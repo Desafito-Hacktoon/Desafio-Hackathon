@@ -134,7 +134,6 @@
 
       @if (totalPages() > 0) {
       <div class="flex items-center justify-between border-t border-gray-200 pt-4">
-        <!-- Informações à esquerda -->
         <div class="flex items-center gap-4">
           <div class="text-sm text-gray-700">
             Mostrando <span class="font-medium">{{ paginationInfo().start }}</span> até
@@ -146,7 +145,6 @@
             }
           </div>
 
-          <!-- Dropdown para selecionar itens por página -->
           <div class="flex items-center gap-2">
             <label class="text-sm font-medium text-gray-600">Itens por página:</label>
             <z-select [zValue]="itemsPerPage().toString()" zSize="default" zPlaceholder="Selecione"
@@ -158,7 +156,6 @@
           </div>
         </div>
 
-        <!-- Paginação à direita -->
         <div>
           <z-pagination [zPageIndex]="currentPage()" [zTotal]="totalPages()"
             (zPageIndexChange)="onPageChange($event)" />
@@ -167,31 +164,15 @@
       }
     </div>
   </z-card>
-  <!-- Card com gráfico de pizza -->
   <div class="grid grid-cols-3 gap-5 mt-6">
-    <div>
-      <p-card class="m-4">
-        <ng-template pTemplate="header">
-          <h2 class="text-2xl font-bold mb-4 text-gray-800">Tipos de Ocorrências</h2>
-        </ng-template>
-        <p-chart type="pie" [data]="pieData" [options]="pieOptions" class="h-[400px]"></p-chart>
-      </p-card>
-    </div>
-    <div>
-      <p-card class="m-4">
-        <ng-template pTemplate="header">
-          <h2 class="text-2xl font-bold mb-4 text-gray-800">Bairros</h2>
-        </ng-template>
-        <p-chart type="pie" [data]="pieData2" [options]="pieOptions2" class="h-[400px]"></p-chart>
-      </p-card>
-    </div>
-    <div>
-      <p-card class="m-4">
-        <ng-template pTemplate="header">
-          <h2 class="text-2xl font-bold mb-4 text-gray-800">Status</h2>
-        </ng-template>
-        <p-chart type="pie" [data]="pieData3" [options]="pieOptions3" class="h-[400px]"></p-chart>
-      </p-card>
-    </div>
+    <z-card zTitle="Tipos de Ocorrências">
+      <z-pie-chart [chartData]="pieData" [chartOptions]="pieOptions" />
+    </z-card>
+    <z-card zTitle="Bairros">
+      <z-pie-chart [chartData]="pieData2" [chartOptions]="pieOptions2" />
+    </z-card>
+    <z-card zTitle="Status">
+      <z-pie-chart [chartData]="pieData3" [chartOptions]="pieOptions3" />
+    </z-card>
   </div>
 </div>
