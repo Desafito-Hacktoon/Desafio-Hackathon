@@ -112,9 +112,26 @@ export class LeafletMapComponent implements AfterViewInit, OnDestroy {
 
     // Gera a grade hexagonal com posições fixas
     // Os hexágonos sempre têm as mesmas posições no mundo real
+    // Expande os bounds significativamente para garantir cobertura completa em todos os zooms
+    const zoom = this.map.getZoom();
+    // Margem maior em zooms distantes
+    const margin = zoom < 10 ? 0.1 : zoom < 13 ? 0.05 : 0.02;
+    
     const hexagons = HexagonUtil.generateHexagonGrid({
-      bounds: { north, south, east, west },
+      bounds: { 
+        north: north + margin, 
+        south: south - margin, 
+        east: east + margin, 
+        west: west - margin 
+      },
       hexSize: 200 // Não usado diretamente, mas mantido para compatibilidade
+    });
+    
+    console.log(`Zoom: ${zoom}, Bounds expandidos:`, { 
+      north: north + margin, 
+      south: south - margin, 
+      east: east + margin, 
+      west: west - margin 
     });
 
     // Encontra ocorrências para cada hexágono baseado na localização geográfica
