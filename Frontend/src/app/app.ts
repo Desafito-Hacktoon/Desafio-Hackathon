@@ -7,6 +7,8 @@ import { HeaderComponent as ZHeaderComponent } from './shared/components/layout/
 import { ContentComponent } from './shared/components/layout/content.component';
 import { SidebarComponent as ZSidebarComponent, SidebarGroupComponent, SidebarGroupLabelComponent } from './shared/components/layout/sidebar.component';
 import { ZardIconComponent } from './shared/components/icon/icon.component';
+import {AuthService} from "./auth/service/auth";
+
 
 @Component({
   selector: 'app-root',
@@ -46,4 +48,5 @@ export class App {
     const currentUrl = this.router.url;
     this.currentPageTitle.set(this.pageTitles[currentUrl] || 'Dashboard');
   }
+  constructor(public auth: AuthService) {}
 }
