@@ -1,12 +1,14 @@
-import {AfterViewInit, Component, OnDestroy} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, signal} from '@angular/core';
 import * as L from 'leaflet';
 import {HeatmapService} from '../services/heatmap.service';
 import {HexagonUtil} from '../utils/hexagon.util';
+import {ZardIconComponent} from '@shared/components/icon/icon.component';
+import {CommonModule} from '@angular/common';
 
 @Component({
   selector: 'app-leaflet-map',
   standalone: true,
-  imports: [],
+  imports: [ZardIconComponent, CommonModule],
   templateUrl: './leaflet.map.html',
   styleUrls: ['./leaflet.map.css',]
 })
@@ -16,6 +18,7 @@ export class LeafletMapComponent implements AfterViewInit, OnDestroy {
   private mapMoveEndHandler?: () => void;
   private mapZoomEndHandler?: () => void;
   private occurrenceData: Map<string, { count: number; intensity: number; point: [number, number] }> = new Map();
+  showInfoTooltip = signal(true);
 
   constructor(private heatmapService: HeatmapService) {}
 
@@ -223,5 +226,9 @@ export class LeafletMapComponent implements AfterViewInit, OnDestroy {
       // Adiciona ao grupo de camadas
       this.hexagonLayers.addLayer(hexagonPolygon);
     });
+  }
+
+  toggleInfoTooltip() {
+    this.showInfoTooltip.set(!this.showInfoTooltip());
   }
 }
