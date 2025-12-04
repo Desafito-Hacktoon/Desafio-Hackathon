@@ -1,6 +1,7 @@
 import { Component, signal } from '@angular/core';
 import {RouterLink, RouterOutlet} from '@angular/router';
 import { MapModule } from './map/map.module';
+import {AuthService} from "./auth/service/auth";
 
 
 @Component({
@@ -12,4 +13,5 @@ import { MapModule } from './map/map.module';
 })
 export class App {
   protected readonly title = signal('heatMap-app');
+  constructor(public auth: AuthService) {}
 }
