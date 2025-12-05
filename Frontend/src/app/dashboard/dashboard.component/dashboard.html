@@ -30,11 +30,11 @@
         <span class="font-medium">Total de Ocorrências</span>
       </div>
     </ng-template>
-    <z-card [zTitle]="totalOcorrenciasTitle">
-      <div class="space-y-2">
-        <div class="text-2xl font-semibold text-gray-900">{{ totalOcorrencias() }}</div>
+    <z-card [zTitle]="totalOcorrenciasTitle" class="!p-4">
+      <div class="space-y-1">
+        <div class="text-xl font-semibold text-gray-900">{{ totalOcorrencias() }}</div>
         @if (variacaoTotalOcorrencias() !== null) {
-          <div class="flex items-center gap-2 pt-2 border-t border-gray-100">
+          <div class="flex items-center gap-1.5 pt-1.5 border-t border-gray-100">
             @if (variacaoTotalOcorrencias() !== 0) {
               <div class="flex items-center gap-1" [ngClass]="variacaoTotalOcorrencias()! > 0 ? 'text-red-600' : 'text-green-600'">
                 <z-icon [zType]="variacaoTotalOcorrencias()! > 0 ? 'arrow-up' : 'arrow-down'" zSize="sm"></z-icon>
@@ -62,11 +62,11 @@
         <span class="font-medium">Ocorrências Críticas</span>
       </div>
     </ng-template>
-    <z-card [zTitle]="ocorrenciasCriticasTitle">
-      <div class="space-y-2">
-        <div class="text-2xl font-semibold text-gray-900">{{ ocorrenciasCriticas() }}</div>
+    <z-card [zTitle]="ocorrenciasCriticasTitle" class="!p-4">
+      <div class="space-y-1">
+        <div class="text-xl font-semibold text-gray-900">{{ ocorrenciasCriticas() }}</div>
         @if (variacaoOcorrenciasCriticas() !== null) {
-          <div class="flex items-center gap-2 pt-2 border-t border-gray-100">
+          <div class="flex items-center gap-1.5 pt-1.5 border-t border-gray-100">
             @if (variacaoOcorrenciasCriticas() !== 0) {
               <div class="flex items-center gap-1" [ngClass]="variacaoOcorrenciasCriticas()! > 0 ? 'text-red-600' : 'text-green-600'">
                 <z-icon [zType]="variacaoOcorrenciasCriticas()! > 0 ? 'arrow-up' : 'arrow-down'" zSize="sm"></z-icon>
@@ -94,11 +94,11 @@
         <span class="font-medium">Ocorrências em Andamento</span>
       </div>
     </ng-template>
-    <z-card [zTitle]="ocorrenciasEmAndamentoTitle">
-      <div class="space-y-2">
-        <div class="text-2xl font-semibold text-gray-900">{{ ocorrenciasEmAndamento() }}</div>
+    <z-card [zTitle]="ocorrenciasEmAndamentoTitle" class="!p-4">
+      <div class="space-y-1">
+        <div class="text-xl font-semibold text-gray-900">{{ ocorrenciasEmAndamento() }}</div>
         @if (variacaoOcorrenciasEmAndamento() !== null) {
-          <div class="flex items-center gap-2 pt-2 border-t border-gray-100">
+          <div class="flex items-center gap-1.5 pt-1.5 border-t border-gray-100">
             @if (variacaoOcorrenciasEmAndamento() !== 0) {
               <div class="flex items-center gap-1" [ngClass]="variacaoOcorrenciasEmAndamento()! > 0 ? 'text-green-600' : 'text-red-600'">
                 <z-icon [zType]="variacaoOcorrenciasEmAndamento()! > 0 ? 'arrow-up' : 'arrow-down'" zSize="sm"></z-icon>
