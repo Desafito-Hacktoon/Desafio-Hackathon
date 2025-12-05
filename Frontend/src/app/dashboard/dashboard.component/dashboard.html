@@ -17,20 +17,110 @@
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
-    <z-card zTitle="Total de Ocorrências">
-      <div class="text-2xl font-semibold text-gray-900">{{ totalOcorrencias() }}</div>
+    <ng-template #totalOcorrenciasTitle>
+      <div class="flex items-center gap-2">
+        <z-icon zType="file-text" zSize="default" class="text-gray-600"></z-icon>
+        <span class="font-medium">Total de Ocorrências</span>
+      </div>
+    </ng-template>
+    <z-card [zTitle]="totalOcorrenciasTitle">
+      <div class="space-y-2">
+        <div class="text-2xl font-semibold text-gray-900">{{ totalOcorrencias() }}</div>
+        @if (variacaoTotalOcorrencias() !== null) {
+          <div class="flex items-center gap-2 pt-2 border-t border-gray-100">
+            @if (variacaoTotalOcorrencias() !== 0) {
+              <div class="flex items-center gap-1" [ngClass]="variacaoTotalOcorrencias()! > 0 ? 'text-red-600' : 'text-green-600'">
+                <z-icon [zType]="variacaoTotalOcorrencias()! > 0 ? 'arrow-up' : 'arrow-down'" zSize="sm"></z-icon>
+                <span class="text-sm font-medium">{{ Math.abs(variacaoTotalOcorrencias()!) }}%</span>
+              </div>
+              <span class="text-xs text-gray-500">
+                {{ variacaoTotalOcorrencias()! > 0 ? 'a mais' : 'a menos' }} que o período anterior
+              </span>
+            } @else {
+              <div class="flex items-center gap-1 text-gray-600">
+                <span class="text-sm font-medium">0%</span>
+              </div>
+              <span class="text-xs text-gray-500">
+                sem variação em relação ao período anterior
+              </span>
+            }
+          </div>
+        }
+      </div>
     </z-card>
 
-    <z-card zTitle="Ocorrências Críticas">
-      <div class="text-2xl font-semibold text-red-600">{{ ocorrenciasCriticas() }}</div>
+    <ng-template #ocorrenciasCriticasTitle>
+      <div class="flex items-center gap-2">
+        <z-icon zType="circle-alert" zSize="default" class="text-gray-600"></z-icon>
+        <span class="font-medium">Ocorrências Críticas</span>
+      </div>
+    </ng-template>
+    <z-card [zTitle]="ocorrenciasCriticasTitle">
+      <div class="space-y-2">
+        <div class="text-2xl font-semibold text-red-600">{{ ocorrenciasCriticas() }}</div>
+        @if (variacaoOcorrenciasCriticas() !== null) {
+          <div class="flex items-center gap-2 pt-2 border-t border-gray-100">
+            @if (variacaoOcorrenciasCriticas() !== 0) {
+              <div class="flex items-center gap-1" [ngClass]="variacaoOcorrenciasCriticas()! > 0 ? 'text-red-600' : 'text-green-600'">
+                <z-icon [zType]="variacaoOcorrenciasCriticas()! > 0 ? 'arrow-up' : 'arrow-down'" zSize="sm"></z-icon>
+                <span class="text-sm font-medium">{{ Math.abs(variacaoOcorrenciasCriticas()!) }}%</span>
+              </div>
+              <span class="text-xs text-gray-500">
+                {{ variacaoOcorrenciasCriticas()! > 0 ? 'a mais' : 'a menos' }} que o período anterior
+              </span>
+            } @else {
+              <div class="flex items-center gap-1 text-gray-600">
+                <span class="text-sm font-medium">0%</span>
+              </div>
+              <span class="text-xs text-gray-500">
+                sem variação em relação ao período anterior
+              </span>
+            }
+          </div>
+        }
+      </div>
     </z-card>
 
-    <z-card zTitle="Ocorrências em Andamento">
-      <div class="text-2xl font-semibold text-blue-600">{{ ocorrenciasEmAndamento() }}</div>
+    <ng-template #ocorrenciasEmAndamentoTitle>
+      <div class="flex items-center gap-2">
+        <z-icon zType="clock" zSize="default" class="text-gray-600"></z-icon>
+        <span class="font-medium">Ocorrências em Andamento</span>
+      </div>
+    </ng-template>
+    <z-card [zTitle]="ocorrenciasEmAndamentoTitle">
+      <div class="space-y-2">
+        <div class="text-2xl font-semibold text-blue-600">{{ ocorrenciasEmAndamento() }}</div>
+        @if (variacaoOcorrenciasEmAndamento() !== null) {
+          <div class="flex items-center gap-2 pt-2 border-t border-gray-100">
+            @if (variacaoOcorrenciasEmAndamento() !== 0) {
+              <div class="flex items-center gap-1 text-red-600">
+                <z-icon [zType]="variacaoOcorrenciasEmAndamento()! > 0 ? 'arrow-up' : 'arrow-down'" zSize="sm"></z-icon>
+                <span class="text-sm font-medium">{{ Math.abs(variacaoOcorrenciasEmAndamento()!) }}%</span>
+              </div>
+              <span class="text-xs text-gray-500">
+                {{ variacaoOcorrenciasEmAndamento()! > 0 ? 'a mais' : 'a menos' }} que o período anterior
+              </span>
+            } @else {
+              <div class="flex items-center gap-1 text-gray-600">
+                <span class="text-sm font-medium">0%</span>
+              </div>
+              <span class="text-xs text-gray-500">
+                sem variação em relação ao período anterior
+              </span>
+            }
+          </div>
+        }
+      </div>
     </z-card>
   </div>
 
-  <z-card zTitle="Ocorrências do Período">
+  <ng-template #ocorrenciasDoPeriodoTitle>
+    <div class="flex items-center gap-2">
+      <z-icon zType="calendar" zSize="default" class="text-gray-600"></z-icon>
+      <span class="font-medium">Ocorrências do Período</span>
+    </div>
+  </ng-template>
+  <z-card [zTitle]="ocorrenciasDoPeriodoTitle">
     <div class="space-y-4">
       <div class="p-3 bg-gray-50 rounded-lg border">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3 items-end">
@@ -196,18 +286,44 @@
     </div>
   </z-card>
   <div class="grid grid-cols-3 gap-5 mt-6">
-    <z-card zTitle="Tipos de Ocorrências">
+    <ng-template #tiposOcorrenciasTitle>
+      <div class="flex items-center gap-2">
+        <z-icon zType="tag" zSize="default" class="text-gray-600"></z-icon>
+        <span class="font-medium">Tipos de Ocorrências</span>
+      </div>
+    </ng-template>
+    <z-card [zTitle]="tiposOcorrenciasTitle">
       <z-pie-chart [chartData]="pieData" [chartOptions]="pieOptions" />
     </z-card>
-    <z-card zTitle="Bairros">
+    
+    <ng-template #bairrosTitle>
+      <div class="flex items-center gap-2">
+        <z-icon zType="layers" zSize="default" class="text-gray-600"></z-icon>
+        <span class="font-medium">Bairros</span>
+      </div>
+    </ng-template>
+    <z-card [zTitle]="bairrosTitle">
       <z-pie-chart [chartData]="pieData2" [chartOptions]="pieOptions2" />
     </z-card>
-    <z-card zTitle="Status">
+    
+    <ng-template #statusTitle>
+      <div class="flex items-center gap-2">
+        <z-icon zType="badge-check" zSize="default" class="text-gray-600"></z-icon>
+        <span class="font-medium">Status</span>
+      </div>
+    </ng-template>
+    <z-card [zTitle]="statusTitle">
       <z-pie-chart [chartData]="pieData3" [chartOptions]="pieOptions3" />
     </z-card>
   </div>
 
-  <z-card zTitle="Ocorrências por Período" class="mt-6">
+  <ng-template #ocorrenciasPorPeriodoTitle>
+    <div class="flex items-center gap-2">
+      <z-icon zType="layers-2" zSize="default" class="text-gray-600"></z-icon>
+      <span class="font-medium">Ocorrências por Período</span>
+    </div>
+  </ng-template>
+  <z-card [zTitle]="ocorrenciasPorPeriodoTitle" class="mt-6">
     <div class="mb-4 p-3 bg-gray-50 rounded-lg border">
       <p class="text-sm text-gray-600">
         O gráfico abaixo mostra as ocorrências do período selecionado no filtro acima: <strong>{{

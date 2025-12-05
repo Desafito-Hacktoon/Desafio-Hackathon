@@ -1,4 +1,4 @@
-import {Component, OnInit, computed, signal, inject} from '@angular/core';
+import {Component, OnInit, computed, signal, inject, viewChild, TemplateRef} from '@angular/core';
 import {DatePipe, NgClass, CommonModule} from '@angular/common';
 import {DashboardService} from '../dashboardService/dashboard-service';
 import {DashboardStatsResponse, PeriodoSelecionado} from '../../models/dashboard.models';
@@ -22,6 +22,7 @@ import {ZardButtonComponent} from '@shared/components/button/button.component';
 import {ZardCardComponent} from '@shared/components/card/card.component';
 import {ZardPieChartComponent} from '@shared/components/chart/pie-chart.component';
 import {ZardLineChartComponent, LineChartData} from '@shared/components/chart/line-chart.component';
+import {ZardIconComponent} from '@shared/components/icon/icon.component';
 import {ZardDatePickerComponent} from '@shared/components/date-picker/date-picker.component';
 import {Router} from '@angular/router';
 import {FormsModule} from '@angular/forms';
@@ -46,11 +47,15 @@ import {FormsModule} from '@angular/forms';
     ZardCardComponent,
     ZardPieChartComponent,
     ZardLineChartComponent,
+    ZardIconComponent,
   ],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css'],
 })
 export class Dashboard implements OnInit {
+  // Expor Math para uso no template
+  Math = Math;
+  
   ocorrenciasOriginais = signal<OcorrenciaResponse[]>([]);
   ocorrencias = signal<OcorrenciaResponse[]>([]);
   currentPage = signal(1);
@@ -109,6 +114,7 @@ export class Dashboard implements OnInit {
 
   // Estatísticas do backend
   dashboardStats = signal<DashboardStatsResponse | null>(null);
+  dashboardStatsAnterior = signal<DashboardStatsResponse | null>(null);
   isLoadingStats = signal(false);
 
   // Métricas para os cards (usando dados do backend quando disponível)
@@ -124,6 +130,31 @@ export class Dashboard implements OnInit {
     return this.dashboardStats()?.ocorrenciasEmAndamento ?? this.ocorrenciasOriginais().filter(oc => 
       oc.status === 'EM_ANDAMENTO'
     ).length;
+  });
+
+  // Funções para calcular porcentagem de variação
+  calcularVariacaoPercentual = (valorAtual: number, valorAnterior: number): number | null => {
+    if (!valorAnterior || valorAnterior === 0) return null;
+    const variacao = ((valorAtual - valorAnterior) / valorAnterior) * 100;
+    return Math.round(variacao * 10) / 10; // Arredondar para 1 casa decimal
+  };
+
+  variacaoTotalOcorrencias = computed(() => {
+    const atual = this.totalOcorrencias();
+    const anterior = this.dashboardStatsAnterior()?.totalOcorrencias ?? 0;
+    return this.calcularVariacaoPercentual(atual, anterior);
+  });
+
+  variacaoOcorrenciasCriticas = computed(() => {
+    const atual = this.ocorrenciasCriticas();
+    const anterior = this.dashboardStatsAnterior()?.ocorrenciasCriticas ?? 0;
+    return this.calcularVariacaoPercentual(atual, anterior);
+  });
+
+  variacaoOcorrenciasEmAndamento = computed(() => {
+    const atual = this.ocorrenciasEmAndamento();
+    const anterior = this.dashboardStatsAnterior()?.ocorrenciasEmAndamento ?? 0;
+    return this.calcularVariacaoPercentual(atual, anterior);
   });
 
   constructor(
@@ -551,6 +582,19 @@ export class Dashboard implements OnInit {
   }
 
   /**
+   * Calcula o período anterior baseado no período atual selecionado
+   */
+  private calcularPeriodoAnterior(periodo: PeriodoSelecionado): { inicio: Date; fim: Date } {
+    const periodoAtual = this.calcularPeriodo(periodo);
+    const duracao = periodoAtual.fim.getTime() - periodoAtual.inicio.getTime();
+    
+    const inicioAnterior = new Date(periodoAtual.inicio.getTime() - duracao - 1);
+    const fimAnterior = new Date(periodoAtual.inicio.getTime() - 1);
+    
+    return { inicio: inicioAnterior, fim: fimAnterior };
+  }
+
+  /**
    * Carrega estatísticas do dashboard com o período selecionado
    */
   carregarEstatisticas() {
@@ -561,12 +605,16 @@ export class Dashboard implements OnInit {
     const dataInicioFormatada = this.formatarDataParaAPI(periodo.inicio);
     const dataFimFormatada = this.formatarDataParaAPI(periodo.fim);
 
+    // Buscar estatísticas do período atual
     this.dashboardService.getDashboardStats(dataInicioFormatada, dataFimFormatada).subscribe({
       next: (stats) => {
         this.dashboardStats.set(stats);
         this.isLoadingStats.set(false);
         // Atualizar gráficos com dados do backend
         this.atualizarGraficosComStats(stats);
+        
+        // Buscar estatísticas do período anterior para comparação
+        this.carregarEstatisticasPeriodoAnterior();
       },
       error: (error) => {
         console.error('Erro ao carregar estatísticas:', error);
@@ -576,6 +624,25 @@ export class Dashboard implements OnInit {
           error: error.error
         });
         this.isLoadingStats.set(false);
+      }
+    });
+  }
+
+  /**
+   * Carrega estatísticas do período anterior para comparação
+   */
+  private carregarEstatisticasPeriodoAnterior() {
+    const periodoAnterior = this.calcularPeriodoAnterior(this.periodoSelecionado());
+    const dataInicioAnteriorFormatada = this.formatarDataParaAPI(periodoAnterior.inicio);
+    const dataFimAnteriorFormatada = this.formatarDataParaAPI(periodoAnterior.fim);
+
+    this.dashboardService.getDashboardStats(dataInicioAnteriorFormatada, dataFimAnteriorFormatada).subscribe({
+      next: (stats) => {
+        this.dashboardStatsAnterior.set(stats);
+      },
+      error: (error) => {
+        console.error('Erro ao carregar estatísticas do período anterior:', error);
+        // Não bloquear a UI se falhar ao carregar período anterior
       }
     });
   }
