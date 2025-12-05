@@ -418,18 +418,31 @@ class _HeatmapPageState extends State<HeatmapPage>
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
           userAgentPackageName: 'com.blumenau.heatmap',
         ),
+        // Hexágonos estilo Favo de Mel
         PolygonLayer(
           polygons: _filteredZones.map((zone) {
             final isSelected = zone.id == _selectedZoneId;
+            final fillColor = PolygonMapper.getHoneycombColor(zone.severity);
+            final opacity = PolygonMapper.getHoneycombOpacity(
+              zone.severity,
+              isSelected,
+            );
+
             return Polygon(
               points: zone.coordinates,
-              color: PolygonMapper.hexToColor(
-                zone.color,
-              ).withValues(alpha: isSelected ? 0.7 : 0.5),
+              color: fillColor.withValues(alpha: opacity),
+              // Borda marrom estilo favo de mel
               borderColor: isSelected
                   ? Colors.white
-                  : PolygonMapper.hexToColor(zone.color),
-              borderStrokeWidth: isSelected ? 4 : 2,
+                  : const Color(0xFF8B4513), // Saddle Brown
+              borderStrokeWidth: isSelected ? 3.5 : 2.0,
+              label: isSelected ? '${zone.problemCount} ocorrências' : null,
+              labelStyle: const TextStyle(
+                color: Colors.black87,
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+                backgroundColor: Colors.white70,
+              ),
             );
           }).toList(),
         ),
@@ -467,9 +480,10 @@ class _HeatmapPageState extends State<HeatmapPage>
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: const Color(0xFF5D4037), width: 1.5),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
+              color: Colors.black.withValues(alpha: 0.15),
               blurRadius: 10,
             ),
           ],
@@ -479,14 +493,18 @@ class _HeatmapPageState extends State<HeatmapPage>
           mainAxisSize: MainAxisSize.min,
           children: [
             const Text(
-              'Legenda',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+              'Intensidade',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+                color: Color(0xFF5D4037),
+              ),
             ),
             const SizedBox(height: 8),
-            _buildLegendItem(Colors.red, 'Crítico'),
-            _buildLegendItem(Colors.orange, 'Alerta'),
-            _buildLegendItem(Colors.yellow, 'Moderado'),
-            _buildLegendItem(Colors.green, 'Estável'),
+            _buildLegendItem(const Color(0xFFDC143C), 'Crítico'),
+            _buildLegendItem(const Color(0xFFFF8C00), 'Alerta'),
+            _buildLegendItem(const Color(0xFFFFD700), 'Moderado'),
+            _buildLegendItem(const Color(0xFFADFF2F), 'Estável'),
           ],
         ),
       ),
@@ -495,20 +513,24 @@ class _HeatmapPageState extends State<HeatmapPage>
 
   Widget _buildLegendItem(Color color, String label) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
+      padding: const EdgeInsets.symmetric(vertical: 3),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 16,
+            width: 18,
             height: 16,
             decoration: BoxDecoration(
-              color: color,
-              borderRadius: BorderRadius.circular(4),
+              color: color.withValues(alpha: 0.7),
+              border: Border.all(color: const Color(0xFF5D4037), width: 1.5),
+              borderRadius: BorderRadius.circular(3),
             ),
           ),
           const SizedBox(width: 8),
-          Text(label, style: const TextStyle(fontSize: 11)),
+          Text(
+            label,
+            style: const TextStyle(fontSize: 11, color: Color(0xFF424242)),
+          ),
         ],
       ),
     );
@@ -529,9 +551,10 @@ class _HeatmapPageState extends State<HeatmapPage>
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: const Color(0xFF5D4037), width: 1.5),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
+              color: Colors.black.withValues(alpha: 0.15),
               blurRadius: 10,
             ),
           ],
@@ -542,14 +565,14 @@ class _HeatmapPageState extends State<HeatmapPage>
           children: [
             const Row(
               children: [
-                Icon(Icons.warning_amber, color: Colors.red, size: 16),
+                Icon(Icons.warning_amber, color: Color(0xFFDC143C), size: 16),
                 SizedBox(width: 4),
                 Text(
                   'Zonas Críticas',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 12,
-                    color: Colors.red,
+                    color: Color(0xFF5D4037),
                   ),
                 ),
               ],
@@ -565,18 +588,25 @@ class _HeatmapPageState extends State<HeatmapPage>
                       child: Row(
                         children: [
                           Container(
-                            width: 8,
-                            height: 8,
-                            decoration: const BoxDecoration(
-                              color: Colors.red,
-                              shape: BoxShape.circle,
+                            width: 10,
+                            height: 10,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFDC143C),
+                              border: Border.all(
+                                color: const Color(0xFF5D4037),
+                                width: 1,
+                              ),
+                              borderRadius: BorderRadius.circular(2),
                             ),
                           ),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
                               zone.name,
-                              style: const TextStyle(fontSize: 11),
+                              style: const TextStyle(
+                                fontSize: 11,
+                                color: Color(0xFF424242),
+                              ),
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
