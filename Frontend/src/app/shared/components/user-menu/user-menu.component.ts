@@ -14,13 +14,13 @@ import { ZardPopoverComponent, ZardPopoverDirective } from '../popover/popover.c
     ZardPopoverDirective
   ],
   template: `
-    <div class="relative w-full">
+    <div class="relative w-full rounded-lg border border-gray-200 overflow-hidden">
       <button
         zPopover
         [zContent]="userMenuTemplate"
         zTrigger="click"
         zPlacement="top"
-        class="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+        class="w-full flex items-center gap-3 px-3 py-2 hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
         <div class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm font-semibold flex-shrink-0">
           {{ userInitials() }}
@@ -29,7 +29,7 @@ import { ZardPopoverComponent, ZardPopoverDirective } from '../popover/popover.c
           <span class="text-sm font-medium text-gray-900 truncate w-full">{{ userName() }}</span>
           <span class="text-xs text-gray-500 truncate w-full">{{ userEmail() }}</span>
         </div>
-        <z-icon zType="chevron-down" class="text-gray-500 flex-shrink-0"></z-icon>
+        <z-icon zType="more-vertical" class="text-gray-500 flex-shrink-0"></z-icon>
       </button>
 
       <ng-template #userMenuTemplate>

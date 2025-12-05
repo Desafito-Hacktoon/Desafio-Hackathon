@@ -18,6 +18,7 @@
 :host ::ng-deep z-layout {
   height: 100vh;
   display: flex;
+  gap: 1px;
 }
 
 :host ::ng-deep z-sidebar {
@@ -30,6 +31,7 @@
   height: 100vh !important;
   display: flex;
   flex-direction: column;
+  background: transparent !important;
 }
 
 :host ::ng-deep z-sidebar.custom-sidebar > aside > div.flex-1 {
@@ -45,15 +47,32 @@
   border: none !important;
 }
 
+:host ::ng-deep z-sidebar.custom-sidebar z-user-menu > div {
+  border: 1px solid rgb(229 231 235) !important;
+}
+
 :host ::ng-deep z-header.custom-header,
 :host ::ng-deep z-header.custom-header *,
 :host ::ng-deep z-header.custom-header header {
   border: none !important;
 }
 
+:host ::ng-deep z-header.custom-header {
+  border-bottom-left-radius: 0.5rem;
+}
+
+:host ::ng-deep z-header.custom-header header {
+  border-bottom-left-radius: 0.5rem;
+}
+
 :host ::ng-deep z-content {
   height: 100%;
   overflow: hidden;
+  border-top-left-radius: 0.5rem;
+}
+
+:host ::ng-deep z-content main {
+  border-top-left-radius: 0.5rem;
 }
 
 :host ::ng-deep z-content main {
