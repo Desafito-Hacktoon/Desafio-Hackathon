@@ -9,6 +9,8 @@ import {authGuard} from "./auth/guards/auth-guard";
 import {RelatoriosListComponent} from './relatorios-ia/components/relatorios-list/relatorios-list';
 import {RelatorioDetailComponent} from './relatorios-ia/components/relatorio-detail/relatorio-detail';
 import {RelatorioGeneratorComponent} from './relatorios-ia/components/relatorio-generator/relatorio-generator';
+import {InsightsListComponent} from './insights-ia/components/insights-list/insights-list';
+import {InsightGeneratorComponent} from './insights-ia/components/insight-generator/insight-generator';
 
 export const routes: Routes = [
     { path: 'login', component: Login },
@@ -20,5 +22,7 @@ export const routes: Routes = [
     { path: 'relatorios-ia', component: RelatoriosListComponent, canActivate: [authGuard] },
     { path: 'relatorios-ia/gerar', component: RelatorioGeneratorComponent, canActivate: [authGuard] },
     { path: 'relatorios-ia/:id', component: RelatorioDetailComponent, canActivate: [authGuard] },
+    { path: 'insights-ia', component: InsightsListComponent, canActivate: [authGuard] },
+    { path: 'insights-ia/gerar', component: InsightGeneratorComponent, canActivate: [authGuard] },
     { path: '**', redirectTo: '/login', pathMatch: 'full' },
 ];

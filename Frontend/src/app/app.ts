@@ -39,7 +39,8 @@ export class App {
     '/dashboard': 'Dashboard',
     '/mapa': 'Mapa',
     '/ocorrencias': 'Ocorrências',
-    '/relatorios-ia': 'Relatórios IA'
+    '/relatorios-ia': 'Relatórios IA',
+    '/insights-ia': 'Insights IA'
   };
 
   constructor(
