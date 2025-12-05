@@ -43,7 +43,9 @@ export class App {
     '/mapa': 'Mapa',
     '/ocorrencias': 'Ocorrências',
     '/relatorios-ia': 'Relatórios IA',
-    '/insights-ia': 'Insights IA'
+    '/relatorios-ia/gerar': 'Gerar Relatório',
+    '/insights-ia': 'Insights IA',
+    '/insights-ia/gerar': 'Gerar Insight'
   };
 
   constructor(
@@ -54,10 +56,12 @@ export class App {
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: any) => {
         const url = event.urlAfterRedirects || event.url;
-        this.currentPageTitle.set(this.pageTitles[url] || 'Dashboard');
+        const urlWithoutQuery = url.split('?')[0];
+        this.currentPageTitle.set(this.pageTitles[urlWithoutQuery] || 'Dashboard');
       });
 
     const currentUrl = this.router.url;
-    this.currentPageTitle.set(this.pageTitles[currentUrl] || 'Dashboard');
+    const urlWithoutQuery = currentUrl.split('?')[0];
+    this.currentPageTitle.set(this.pageTitles[urlWithoutQuery] || 'Dashboard');
   }
 }
