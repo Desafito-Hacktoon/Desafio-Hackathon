@@ -139,10 +139,17 @@ resource "aws_security_group" "BluLabs_sg" {
   }
 }
 
+
+resource "null_resource" "flutter_web" {
+  provisioner "local-exec" {
+    command = "docker-compose -f docker-compose.yml up -d --build"
+    working_dir = "${path.module}"
+  }
+}
+
 # ------------------------------
 # EC2 Instance
 # ------------------------------
-
 resource "aws_instance" "BluLabs_server" {
   ami                         = var.ami_id
   instance_type               = var.instance_type
@@ -156,6 +163,10 @@ resource "aws_instance" "BluLabs_server" {
     set -e
 
     echo "🚀 Iniciando setup da VM..."
+
+    # Atualiza pacotes e instala dependências
+    apt-get update -y
+    apt-get install -y git curl unzip xz-utils zip libglu1-mesa docker.io
 
     # Instalar Docker
     if ! command -v docker &> /dev/null; then
@@ -173,8 +184,37 @@ resource "aws_instance" "BluLabs_server" {
     # Clonar repositório
     cd /home/ubuntu
     git clone -b develop https://github.com/Desafito-Hacktoon/Desafio-Hackathon.git
-       
+    
+    chown -R ubuntu:ubuntu /home/ubuntu/Desafio-Hackathon
+
+    # Instalar Flutter SDK
+    git clone https://github.com/flutter/flutter.git -b stable /home/ubuntu/flutter
+    echo 'export PATH="$PATH:/home/ubuntu/flutter/bin"' >> /home/ubuntu/.bashrc
+    source /home/ubuntu/.bashrc
+
+    # Marca diretório Flutter como seguro para Git
+    git config --global --add safe.directory /home/ubuntu/flutter
+
+    # Corrige permissões
+    chown -R ubuntu:ubuntu /home/ubuntu/flutter
+    chown -R ubuntu:ubuntu /home/ubuntu/Desafio-Hackathon
+
+    # Build do Flutter Web
+    cd /home/ubuntu/Desafio-Hackathon/App-Flutter
+    /home/ubuntu/flutter/bin/flutter clean
+    /home/ubuntu/flutter/bin/flutter pub get
+    /home/ubuntu/flutter/bin/flutter build web
+
+    # Build da imagem Docker
+    cd /home/ubuntu/Desafio-Hackathon
+    docker build -t flutter-web -f DevopsInfra/Dockerfile .
+
+    # Subir container
+    docker run -d -p 4200:80 --name frontend-flutter flutter-web
+         
   EOF
+
+    
 
   # Copia o .env da sua máquina para dentro da EC2
   provisioner "file" {
