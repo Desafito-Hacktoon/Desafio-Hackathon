@@ -23,6 +23,7 @@ import {ZardCardComponent} from '@shared/components/card/card.component';
 import {ZardPieChartComponent} from '@shared/components/chart/pie-chart.component';
 import {ZardLineChartComponent, LineChartData} from '@shared/components/chart/line-chart.component';
 import {ZardIconComponent} from '@shared/components/icon/icon.component';
+import {ZardSegmentedComponent} from '@shared/components/segmented/segmented.component';
 import {ZardDatePickerComponent} from '@shared/components/date-picker/date-picker.component';
 import {Router} from '@angular/router';
 import {FormsModule} from '@angular/forms';
@@ -48,6 +49,8 @@ import {FormsModule} from '@angular/forms';
     ZardPieChartComponent,
     ZardLineChartComponent,
     ZardIconComponent,
+    ZardSegmentedComponent,
+    ZardDatePickerComponent,
   ],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css'],
@@ -89,17 +92,39 @@ export class Dashboard implements OnInit {
     { value: 'hoje', label: 'Hoje' },
     { value: 'ontem', label: 'Ontem' },
     { value: 'essa-semana', label: 'Essa Semana' },
-    { value: 'esse-mes', label: 'Esse Mês' },
-    { value: 'ultimos-90-dias', label: 'Últimos 90 Dias' },
-    { value: 'ultimo-ano', label: 'Último Ano' }
+    { value: 'esse-mes', label: 'Esse Mês' }
   ];
+  
+  // Período de datas selecionado para período customizado
+  periodoDataSelecionado = signal<Date[] | null>(null);
   
   // Label do período selecionado
   periodoSelecionadoLabel = computed(() => {
+    // Se houver período customizado selecionado, mostrar as datas
+    const periodoCustom = this.periodoDataSelecionado();
+    if (periodoCustom && periodoCustom.length === 2) {
+      const inicio = periodoCustom[0];
+      const fim = periodoCustom[1];
+      const inicioFormatado = this.formatarDataParaExibicao(inicio);
+      const fimFormatado = this.formatarDataParaExibicao(fim);
+      return `${inicioFormatado} - ${fimFormatado}`;
+    }
+    
+    // Caso contrário, mostrar o label do período pré-definido
     const periodo = this.periodoSelecionado();
     const option = this.periodosOptions.find(p => p.value === periodo);
     return option?.label || 'Período';
   });
+  
+  /**
+   * Formata uma data para exibição no formato dd/MM/yyyy
+   */
+  private formatarDataParaExibicao(data: Date): string {
+    const dia = String(data.getDate()).padStart(2, '0');
+    const mes = String(data.getMonth() + 1).padStart(2, '0');
+    const ano = data.getFullYear();
+    return `${dia}/${mes}/${ano}`;
+  }
   
   // Opções para os selects
   statusOptions = ['ABERTO', 'EM_ANDAMENTO', 'FECHADO'];
@@ -554,9 +579,19 @@ export class Dashboard implements OnInit {
 
   /**
    * Calcula as datas de início e fim baseado no período selecionado
+   * Se houver um período customizado selecionado, usa ele em vez do período pré-definido
    * Retorna datas no timezone local, mas formatadas para UTC para evitar problemas
    */
   private calcularPeriodo(periodo: PeriodoSelecionado): { inicio: Date; fim: Date } {
+    // Se houver período customizado selecionado, usar ele
+    const periodoCustom = this.periodoDataSelecionado();
+    if (periodoCustom && periodoCustom.length === 2) {
+      const inicio = new Date(periodoCustom[0]);
+      const fim = new Date(periodoCustom[1]);
+      inicio.setHours(0, 0, 0, 0);
+      fim.setHours(23, 59, 59, 999);
+      return { inicio, fim };
+    }
     const agora = new Date();
     const inicio = new Date();
     const fim = new Date();
@@ -660,6 +695,24 @@ export class Dashboard implements OnInit {
    * Calcula o período anterior baseado no período atual selecionado
    */
   private calcularPeriodoAnterior(periodo: PeriodoSelecionado): { inicio: Date; fim: Date } {
+    // Se houver período customizado, calcular período anterior baseado nele
+    const periodoCustom = this.periodoDataSelecionado();
+    if (periodoCustom && periodoCustom.length === 2) {
+      const periodoAtual = this.calcularPeriodo(periodo);
+      const duracao = periodoAtual.fim.getTime() - periodoAtual.inicio.getTime();
+      
+      const inicioAnterior = new Date(periodoAtual.inicio);
+      inicioAnterior.setTime(inicioAnterior.getTime() - duracao - 1);
+      
+      const fimAnterior = new Date(periodoAtual.inicio);
+      fimAnterior.setTime(fimAnterior.getTime() - 1);
+      
+      inicioAnterior.setHours(0, 0, 0, 0);
+      fimAnterior.setHours(23, 59, 59, 999);
+      
+      return { inicio: inicioAnterior, fim: fimAnterior };
+    }
+    
     const periodoAtual = this.calcularPeriodo(periodo);
     const duracao = periodoAtual.fim.getTime() - periodoAtual.inicio.getTime();
     
@@ -728,11 +781,60 @@ export class Dashboard implements OnInit {
   onPeriodoChange(value: string | string[]) {
     const periodo = Array.isArray(value) ? value[0] : value;
     this.periodoSelecionado.set(periodo as PeriodoSelecionado);
+    // Limpar período de datas quando mudar período pré-definido
+    this.periodoDataSelecionado.set(null);
     // Recarregar tanto estatísticas quanto ocorrências
     this.carregarEstatisticas();
     this.carregarOcorrencias();
     // Atualizar gráfico de linha com o novo período
     this.atualizarGraficoLinha();
+  }
+  
+  /**
+   * Computed para o valor do segmented - retorna vazio se houver período customizado
+   */
+  periodoSegmentedValue = computed(() => {
+    const periodoCustom = this.periodoDataSelecionado();
+    // Se houver período customizado selecionado, não mostrar nenhum segmented selecionado
+    if (periodoCustom && periodoCustom.length === 2) {
+      return '';
+    }
+    return this.periodoSelecionado();
+  });
+
+  /**
+   * Handler para mudança de período de datas customizado
+   */
+  onDataChange(dates: Date | Date[] | null) {
+    if (dates === null) {
+      this.periodoDataSelecionado.set(null);
+      return;
+    }
+    
+    const datesArray = Array.isArray(dates) ? dates : [dates];
+    
+    // Quando apenas uma data é selecionada, armazenar temporariamente
+    if (datesArray.length === 1) {
+      this.periodoDataSelecionado.set(datesArray);
+      // Limpar seleção do segmented quando começar a selecionar data
+      this.periodoSelecionado.set('esse-mes'); // Resetar para um valor padrão, mas não será exibido como selecionado
+      return;
+    }
+    
+    // Quando um período completo é selecionado (duas datas), recarregar dados
+    if (datesArray.length === 2) {
+      // Ordenar as datas para garantir que a primeira seja o início e a segunda o fim
+      const sortedDates = [...datesArray].sort((a, b) => a.getTime() - b.getTime());
+      this.periodoDataSelecionado.set(sortedDates);
+      
+      // Limpar seleção do segmented quando período customizado é selecionado
+      this.periodoSelecionado.set('esse-mes'); // Resetar para um valor padrão, mas não será exibido como selecionado
+      
+      // Recarregar estatísticas e ocorrências com o período customizado
+      this.carregarEstatisticas();
+      this.carregarOcorrencias();
+      this.atualizarGraficoLinha();
+    }
   }
 }
 

@@ -6,13 +6,20 @@
     <div></div>
     }
     <div class="flex items-center gap-3">
-      <label class="text-sm font-medium text-gray-700">Período:</label>
-      <z-select [zValue]="periodoSelecionado()" zSize="default" zPlaceholder="Selecione o período"
-        (zSelectionChange)="onPeriodoChange($event)" class="w-48">
-        @for (periodo of periodosOptions; track periodo.value) {
-        <z-select-item [zValue]="periodo.value">{{ periodo.label }}</z-select-item>
-        }
-      </z-select>
+      <z-segmented 
+        [zValue]="periodoSegmentedValue()" 
+        [zOptions]="periodosOptions"
+        (zSelectionChange)="onPeriodoChange($event)"
+        zSize="default">
+      </z-segmented>
+      <z-date-picker
+        [value]="periodoDataSelecionado()"
+        (dateChange)="onDataChange($event)"
+        placeholder="Escolher data"
+        zSize="default"
+        zType="outline"
+        zMode="range">
+      </z-date-picker>
     </div>
   </div>
 
@@ -57,7 +64,7 @@
     </ng-template>
     <z-card [zTitle]="ocorrenciasCriticasTitle">
       <div class="space-y-2">
-        <div class="text-2xl font-semibold text-red-600">{{ ocorrenciasCriticas() }}</div>
+        <div class="text-2xl font-semibold text-gray-900">{{ ocorrenciasCriticas() }}</div>
         @if (variacaoOcorrenciasCriticas() !== null) {
           <div class="flex items-center gap-2 pt-2 border-t border-gray-100">
             @if (variacaoOcorrenciasCriticas() !== 0) {
@@ -89,11 +96,11 @@
     </ng-template>
     <z-card [zTitle]="ocorrenciasEmAndamentoTitle">
       <div class="space-y-2">
-        <div class="text-2xl font-semibold text-blue-600">{{ ocorrenciasEmAndamento() }}</div>
+        <div class="text-2xl font-semibold text-gray-900">{{ ocorrenciasEmAndamento() }}</div>
         @if (variacaoOcorrenciasEmAndamento() !== null) {
           <div class="flex items-center gap-2 pt-2 border-t border-gray-100">
             @if (variacaoOcorrenciasEmAndamento() !== 0) {
-              <div class="flex items-center gap-1 text-red-600">
+              <div class="flex items-center gap-1" [ngClass]="variacaoOcorrenciasEmAndamento()! > 0 ? 'text-green-600' : 'text-red-600'">
                 <z-icon [zType]="variacaoOcorrenciasEmAndamento()! > 0 ? 'arrow-up' : 'arrow-down'" zSize="sm"></z-icon>
                 <span class="text-sm font-medium">{{ Math.abs(variacaoOcorrenciasEmAndamento()!) }}%</span>
               </div>
