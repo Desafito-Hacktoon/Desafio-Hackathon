@@ -151,8 +151,23 @@ export class ZardCalendarComponent {
 
     const currentDate = this.currentDate();
     const selectedMonth = Number.parseInt(this.currentMonthValue());
-    const newDate = new Date(parsedYear, Number.isNaN(selectedMonth) ? currentDate.getMonth() : selectedMonth, 1);
+    const monthToUse = Number.isNaN(selectedMonth) ? currentDate.getMonth() : selectedMonth;
+    
+    // Criar nova data com o ano selecionado e o mês atual
+    // Usar o dia 1 para evitar problemas com meses que têm menos dias (ex: 29 de fevereiro)
+    const newDate = new Date(parsedYear, monthToUse, 1);
+    
+    // Validar se a data é válida (ex: evitar problemas com anos inválidos)
+    if (Number.isNaN(newDate.getTime())) {
+      console.warn('Invalid date created from year:', parsedYear, 'month:', monthToUse);
+      return;
+    }
+    
+    // Atualizar tanto o ano quanto garantir que o mês está correto
     this.currentYearValue.set(newDate.getFullYear().toString());
+    this.currentMonthValue.set(newDate.getMonth().toString());
+    
+    // Resetar o foco
     this.gridRef().setFocusedDayIndex(-1);
   }
 
@@ -173,9 +188,12 @@ export class ZardCalendarComponent {
   }
 
   protected navigateYear(direction: number): void {
-    const current = this.currentDate();
-    const newDate = new Date(current.getFullYear() + direction, current.getMonth(), 1);
+    const currentDate = this.currentDate();
+    const currentMonth = Number.parseInt(this.currentMonthValue());
+    const monthToUse = Number.isNaN(currentMonth) ? currentDate.getMonth() : currentMonth;
+    const newDate = new Date(currentDate.getFullYear() + direction, monthToUse, 1);
     this.currentYearValue.set(newDate.getFullYear().toString());
+    this.currentMonthValue.set(newDate.getMonth().toString());
     setTimeout(() => this.gridRef().resetFocus(), 0);
   }
 

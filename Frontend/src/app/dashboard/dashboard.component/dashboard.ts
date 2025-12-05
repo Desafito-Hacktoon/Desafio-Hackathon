@@ -23,6 +23,7 @@ import {ZardCardComponent} from '@shared/components/card/card.component';
 import {ZardPieChartComponent} from '@shared/components/chart/pie-chart.component';
 import {ZardLineChartComponent, LineChartData} from '@shared/components/chart/line-chart.component';
 import {ZardIconComponent} from '@shared/components/icon/icon.component';
+import type {ZardIcon} from '@shared/components/icon/icons';
 import {ZardSegmentedComponent} from '@shared/components/segmented/segmented.component';
 import {ZardDatePickerComponent} from '@shared/components/date-picker/date-picker.component';
 import {Router} from '@angular/router';
@@ -126,8 +127,15 @@ export class Dashboard implements OnInit {
     return `${dia}/${mes}/${ano}`;
   }
   
-  // Opções para os selects
-  statusOptions = ['ABERTO', 'EM_ANDAMENTO', 'FECHADO'];
+  // Opções para os selects - todos os status disponíveis do enum StatusOcorrencia
+  statusOptions = [
+    'PENDENTE',
+    'EM_AVALIACAO',
+    'EM_ANDAMENTO',
+    'PROBLEMA_IDENTIFICADO',
+    'RESOLVIDO',
+    'CANCELADO'
+  ];
   bairrosOptions = computed(() => {
     const bairros = new Set(this.ocorrenciasOriginais().map(oc => oc.bairro));
     return Array.from(bairros).sort();
@@ -801,6 +809,90 @@ export class Dashboard implements OnInit {
     }
     return this.periodoSelecionado();
   });
+
+  /**
+   * Retorna a classe CSS apropriada para o badge de status (estilo minimalista com bordas e texto coloridos)
+   */
+  getStatusBadgeClass(status: string): string {
+    switch (status) {
+      case 'EM_ANDAMENTO':
+        return 'border border-blue-500 text-blue-600 bg-transparent';
+      case 'CANCELADO':
+        return 'border border-red-500 text-red-600 bg-transparent';
+      case 'RESOLVIDO':
+        return 'border border-green-500 text-green-600 bg-transparent';
+      case 'PROBLEMA_IDENTIFICADO':
+        return 'border border-orange-500 text-orange-600 bg-transparent';
+      case 'PENDENTE':
+        return 'border border-gray-500 text-gray-600 bg-transparent';
+      case 'EM_AVALIACAO':
+        return 'border border-yellow-500 text-yellow-600 bg-transparent';
+      default:
+        return 'border border-gray-500 text-gray-600 bg-transparent';
+    }
+  }
+
+  /**
+   * Retorna o ícone apropriado para cada status
+   */
+  getStatusIcon(status: string): ZardIcon {
+    switch (status) {
+      case 'PENDENTE':
+        return 'clock';
+      case 'EM_AVALIACAO':
+        return 'clock';
+      case 'EM_ANDAMENTO':
+        return 'clock';
+      case 'PROBLEMA_IDENTIFICADO':
+        return 'circle-alert';
+      case 'RESOLVIDO':
+        return 'circle-check';
+      case 'CANCELADO':
+        return 'circle-x';
+      default:
+        return 'circle';
+    }
+  }
+
+  /**
+   * Formata o tipo de problema para exibição legível
+   * Ex: BOCA_LOBO -> Boca de lobo
+   */
+  formatarTipoProblema(tipo: string): string {
+    if (!tipo) return tipo;
+    
+    // Mapeamento de tipos específicos para textos mais legíveis
+    const mapeamento: Record<string, string> = {
+      'BOCA_LOBO': 'Boca de lobo',
+      'GUIA_SARJETA': 'Guia ou sarjeta',
+      'PONTE_VIADUTO': 'Ponte ou viaduto',
+      'POSTE_CAIDO': 'Poste caído',
+      'LAMPADA_QUEIMADA': 'Lâmpada queimada',
+      'LIXO_ACUMULADO': 'Lixo acumulado',
+      'COLETA_LIXO': 'Coleta de lixo',
+      'PODA_ARVORE': 'Poda de árvore',
+      'ARVORE_CAIDA': 'Árvore caída',
+      'VAZAMENTO_AGUA': 'Vazamento de água',
+      'ANIMAIS_ABANDONADOS': 'Animais abandonados',
+      'ANIMAIS_SOLTOS': 'Animais soltos',
+      'PARADA_ONIBUS': 'Parada de ônibus',
+      'AREA_USO_DROGAS': 'Área de uso de drogas',
+      'MOBILIARIO_URBANO': 'Mobiliário urbano',
+      'ACADEMIA_AR_LIVRE': 'Academia ao ar livre',
+    };
+
+    // Se houver mapeamento específico, usar ele
+    if (mapeamento[tipo]) {
+      return mapeamento[tipo];
+    }
+
+    // Caso contrário, converter underscore para espaço e capitalizar
+    return tipo
+      .toLowerCase()
+      .split('_')
+      .map(palavra => palavra.charAt(0).toUpperCase() + palavra.slice(1))
+      .join(' ');
+  }
 
   /**
    * Handler para mudança de período de datas customizado

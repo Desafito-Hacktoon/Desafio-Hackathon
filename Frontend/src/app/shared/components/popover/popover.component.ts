@@ -358,7 +358,22 @@ export class ZardPopoverDirective implements OnInit, OnDestroy {
       .subscribe(event => {
         const clickTarget = event.target as HTMLElement;
 
+        // Não fechar se o clique foi no elemento de origem
         if (this.nativeElement.contains(clickTarget)) {
+          return;
+        }
+
+        // Não fechar se o clique foi dentro do conteúdo do popover
+        const overlayElement = this.overlayRef?.overlayElement;
+        if (overlayElement && overlayElement.contains(clickTarget)) {
+          return;
+        }
+
+        // Não fechar se o clique foi dentro de um overlay de select (dropdown de mês/ano)
+        // Verifica se o elemento clicado está dentro de qualquer overlay do Angular CDK
+        // que pode ser um select dropdown dentro do popover
+        const clickedInSelectOverlay = clickTarget.closest('.zard-select-overlay, .cdk-overlay-pane');
+        if (clickedInSelectOverlay) {
           return;
         }
 
