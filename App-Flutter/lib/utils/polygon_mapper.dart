@@ -4,7 +4,12 @@ import 'package:latlong2/latlong.dart';
 import '../models/zone_model.dart';
 
 /// Utilitário para converter dados GeoJSON em polígonos do Flutter Map
+/// Estilo visual: Favo de Mel (Honeycomb)
 class PolygonMapper {
+  // Cores do tema Favo de Mel
+  static const Color honeycombBorder = Color(0xFF8B4513); // Marrom mel
+  static const Color honeycombBorderLight = Color(0xFFD2691E); // Chocolate
+
   /// Converte uma cor hexadecimal em Color do Flutter
   static Color hexToColor(String hexColor) {
     hexColor = hexColor.replaceAll('#', '');
@@ -16,25 +21,59 @@ class PolygonMapper {
     return Color(int.parse(hexColor, radix: 16));
   }
 
-  /// Converte uma ZoneModel em um Polygon do Flutter Map
+  /// Retorna cor estilo favo de mel baseada na severidade
+  static Color getHoneycombColor(String severity) {
+    switch (severity) {
+      case 'critical':
+        return const Color(0xFFDC143C); // Crimson - vermelho intenso
+      case 'warning':
+        return const Color(0xFFFF8C00); // Laranja escuro
+      case 'moderate':
+        return const Color(0xFFFFD700); // Dourado
+      case 'low':
+        return const Color(0xFFADFF2F); // Verde amarelado
+      default:
+        return const Color(0xFFFFF8DC); // Creme claro
+    }
+  }
+
+  /// Retorna a opacidade baseada na severidade (mais intenso = mais opaco)
+  static double getHoneycombOpacity(String severity, bool isSelected) {
+    if (isSelected) return 0.85;
+
+    switch (severity) {
+      case 'critical':
+        return 0.75;
+      case 'warning':
+        return 0.65;
+      case 'moderate':
+        return 0.55;
+      case 'low':
+        return 0.45;
+      default:
+        return 0.35;
+    }
+  }
+
+  /// Converte uma ZoneModel em um Polygon estilo Favo de Mel
   static Polygon zoneToPolygon({
     required ZoneModel zone,
     bool isSelected = false,
   }) {
-    final Color baseColor = hexToColor(zone.color);
-    final Color fillColor = baseColor.withValues(alpha: isSelected ? 0.7 : 0.4);
-    final Color borderColor = isSelected ? Colors.white : baseColor;
+    final Color fillColor = getHoneycombColor(zone.severity);
+    final double opacity = getHoneycombOpacity(zone.severity, isSelected);
 
     return Polygon(
       points: zone.coordinates,
-      color: fillColor,
-      borderColor: borderColor,
-      borderStrokeWidth: isSelected ? 4.0 : 2.0,
-      label: isSelected ? zone.name : null,
+      color: fillColor.withValues(alpha: opacity),
+      borderColor: isSelected ? Colors.white : honeycombBorder,
+      borderStrokeWidth: isSelected ? 3.5 : 2.0,
+      label: isSelected ? '${zone.problemCount} ocorrências' : null,
       labelStyle: const TextStyle(
-        color: Colors.white,
+        color: Colors.black87,
         fontWeight: FontWeight.bold,
         fontSize: 12,
+        shadows: [Shadow(color: Colors.white, blurRadius: 4)],
       ),
     );
   }
