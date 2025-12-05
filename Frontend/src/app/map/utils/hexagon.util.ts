@@ -351,26 +351,77 @@ export class HexagonUtil {
   }
 
   /**
-   * Gera cor baseada na intensidade (escala de laranja/amarelo como Uber/99)
+   * Gera cor baseada na quantidade absoluta de ocorrências
+   * Escala: Amarelo claro (poucas) -> Amarelo -> Laranja -> Vermelho (muitas)
    */
-  static getColorByIntensity(intensity: number): string {
-    if (intensity === 0) {
+  static getColorByOccurrenceCount(count: number): string {
+    if (count === 0) {
       return 'transparent'; // Transparente para sem ocorrências
     }
     
-    // Escala de cores similar ao Uber/99: Amarelo claro -> Laranja -> Vermelho
-    if (intensity < 0.33) {
-      // Amarelo claro para amarelo
-      const factor = intensity / 0.33;
-      return this.interpolateColor('#FFF9C4', '#FFD700', factor);
-    } else if (intensity < 0.66) {
-      // Amarelo para laranja
-      const factor = (intensity - 0.33) / 0.33;
-      return this.interpolateColor('#FFD700', '#FF8C00', factor);
+    // Escala baseada em quantidade absoluta de ocorrências
+    // 1-3: Amarelo muito claro
+    // 4-7: Amarelo claro
+    // 8-12: Amarelo
+    // 13-20: Amarelo para laranja claro
+    // 21-30: Laranja
+    // 31-50: Laranja escuro
+    // 51+: Vermelho
+    
+    if (count <= 3) {
+      // Amarelo muito claro (1-3 ocorrências)
+      const factor = count / 3;
+      return this.interpolateColor('#FFF9C4', '#FFEB3B', factor);
+    } else if (count <= 7) {
+      // Amarelo claro para amarelo (4-7 ocorrências)
+      const factor = (count - 3) / 4;
+      return this.interpolateColor('#FFEB3B', '#FFC107', factor);
+    } else if (count <= 12) {
+      // Amarelo para amarelo intenso (8-12 ocorrências)
+      const factor = (count - 7) / 5;
+      return this.interpolateColor('#FFC107', '#FFA726', factor);
+    } else if (count <= 20) {
+      // Amarelo intenso para laranja claro (13-20 ocorrências)
+      const factor = (count - 12) / 8;
+      return this.interpolateColor('#FFA726', '#FF9800', factor);
+    } else if (count <= 30) {
+      // Laranja claro para laranja (21-30 ocorrências)
+      const factor = (count - 20) / 10;
+      return this.interpolateColor('#FF9800', '#FF6F00', factor);
+    } else if (count <= 50) {
+      // Laranja para laranja escuro (31-50 ocorrências)
+      const factor = (count - 30) / 20;
+      return this.interpolateColor('#FF6F00', '#FF5722', factor);
     } else {
-      // Laranja para vermelho
-      const factor = (intensity - 0.66) / 0.34;
-      return this.interpolateColor('#FF8C00', '#FF4500', factor);
+      // Laranja escuro para vermelho (51+ ocorrências)
+      // Limita a 100 ocorrências para o cálculo do factor
+      const factor = Math.min((count - 50) / 50, 1);
+      return this.interpolateColor('#FF5722', '#F44336', factor);
+    }
+  }
+
+  /**
+   * Calcula a opacidade baseada na quantidade de ocorrências
+   * Retorna opacidade menor para quantidades baixas (amarelo com opacidade)
+   */
+  static getOpacityByOccurrenceCount(count: number): number {
+    if (count === 0) {
+      return 0.05; // Muito transparente para sem ocorrências
+    }
+    
+    // Para quantidades muito baixas, usar opacidade reduzida
+    if (count <= 2) {
+      // Opacidade de 0.3 a 0.4 para 1-2 ocorrências
+      return 0.3 + ((count - 1) / 1) * 0.1;
+    } else if (count <= 5) {
+      // Opacidade de 0.4 a 0.55 para 3-5 ocorrências
+      return 0.4 + ((count - 2) / 3) * 0.15;
+    } else if (count <= 10) {
+      // Opacidade de 0.55 a 0.65 para 6-10 ocorrências
+      return 0.55 + ((count - 5) / 5) * 0.1;
+    } else {
+      // Opacidade completa para 11+ ocorrências
+      return 0.7;
     }
   }
 
