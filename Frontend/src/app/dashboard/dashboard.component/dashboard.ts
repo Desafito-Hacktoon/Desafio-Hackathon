@@ -268,6 +268,30 @@ export class Dashboard implements OnInit {
     this.router.navigate(['/ocorrencias', id]);
   }
 
+  private getPaletaCores(): string[] {
+    return [
+      '#E8523A', '#3A82E8', '#37C26C', '#C537E8', '#E8A237',
+      '#2EC4B6', '#E83A78', '#4090D9', '#55C93E', '#D9733E',
+      '#B24AD9', '#3EC9A5', '#C9C93E', '#E85E3A', '#3A6FE8',
+      '#3AE85E', '#D93AB2', '#E89C3A', '#3AE8C2', '#E83A56',
+      '#4A7FE0', '#66CF4C', '#D95C3A', '#AF3AE8', '#3AD9A1',
+      '#C7D93A', '#E84A3A', '#3A5CE8', '#3AE84A', '#D93A98',
+      '#E8903A', '#29BFAF', '#E83A43', '#4E8EE0', '#5CD953',
+      '#D9853A', '#B23AE0', '#3AD9B8', '#D7D93A', '#E8733A',
+      '#3A8BE8', '#3AE874', '#D93A6C', '#E8B33A', '#32C29F',
+      '#E84F3A', '#5086DF', '#4CD96A', '#D95A3A', '#9E3AE0',
+      '#3AD9C5', '#C2D93A', '#E87E3A', '#3A99E8', '#3AE88A',
+      '#D93A59', '#E8C23A', '#25B8A3', '#E85A3A', '#4F8DE0',
+      '#62D946', '#D96B3A', '#A83AE0', '#3AD9BB', '#D0D93A',
+      '#E86A3A', '#3AAAE8', '#3AE8A1', '#D93A46', '#E8D03A',
+      '#2EBF95', '#E8643A', '#477FE0', '#4CD987', '#D9713A',
+      '#983AE0', '#3AD2D9', '#B7D93A', '#E87A3A', '#3AB7E8',
+      '#3AE8B7', '#D93A3A', '#E8DD3A', '#2EBF7E', '#E85C3A',
+      '#4A89E0', '#46D97A', '#D97D3A', '#8E3AE0', '#3AC7D9',
+      '#A8D93A', '#E8883A', '#3AC4E8', '#3AE8C5', '#D9423A'
+    ];
+  }
+
   atualizarGraficos() {
     const ocorrencias = this.ocorrencias();
     const stats = this.dashboardStats();
@@ -287,7 +311,9 @@ export class Dashboard implements OnInit {
       return acc;
     }, {} as Record<string, number>);
 
-    this.pieData = this.gerarPieData(tipos, ['#FF6384', '#36A2EB', '#FFCE56', '#4CAF50', '#9966FF']);
+    const paletaCores = this.getPaletaCores();
+
+    this.pieData = this.gerarPieData(tipos, paletaCores);
     this.pieOptions = this.gerarPieOptions();
 
     // Gráfico por bairro
@@ -296,7 +322,7 @@ export class Dashboard implements OnInit {
       return acc;
     }, {} as Record<string, number>);
 
-    this.pieData2 = this.gerarPieData(bairros, ['#9C27B0', '#FF9800', '#03A9F4', '#8BC34A']);
+    this.pieData2 = this.gerarPieData(bairros, paletaCores);
     this.pieOptions2 = this.gerarPieOptions();
 
     // Gráfico por status
@@ -305,20 +331,22 @@ export class Dashboard implements OnInit {
       return acc;
     }, {} as Record<string, number>);
 
-    this.pieData3 = this.gerarPieData(status, ['#009688', '#f44335', '#ffc107']);
+    this.pieData3 = this.gerarPieData(status, paletaCores);
     this.pieOptions3 = this.gerarPieOptions();
     
     this.atualizarGraficoLinha();
   }
 
   private atualizarGraficosComStats(stats: DashboardStatsResponse) {
-    this.pieData = this.gerarPieData(stats.ocorrenciasPorTipo, ['#FF6384', '#36A2EB', '#FFCE56', '#4CAF50', '#9966FF']);
+    const paletaCores = this.getPaletaCores();
+
+    this.pieData = this.gerarPieData(stats.ocorrenciasPorTipo, paletaCores);
     this.pieOptions = this.gerarPieOptions();
 
-    this.pieData2 = this.gerarPieData(stats.ocorrenciasPorBairro, ['#9C27B0', '#FF9800', '#03A9F4', '#8BC34A']);
+    this.pieData2 = this.gerarPieData(stats.ocorrenciasPorBairro, paletaCores);
     this.pieOptions2 = this.gerarPieOptions();
 
-    this.pieData3 = this.gerarPieData(stats.ocorrenciasPorStatus, ['#009688', '#f44335', '#ffc107', '#2196F3', '#FF9800', '#4CAF50']);
+    this.pieData3 = this.gerarPieData(stats.ocorrenciasPorStatus, paletaCores);
     this.pieOptions3 = this.gerarPieOptions();
   }
   
@@ -473,12 +501,20 @@ export class Dashboard implements OnInit {
   }
 
     private gerarPieData(obj: Record<string, number>, color:string[]):Piechart{
+      const labels = Object.keys(obj);
+      const data = Object.values(obj);
+      
+      // Criar uma paleta expandida ciclando através das cores disponíveis
+      const backgroundColor = labels.map((_, index) => {
+        return color[index % color.length];
+      });
+      
       return {
-        labels: Object.keys(obj),
+        labels,
         datasets: [
           {
-            data: Object.values(obj),
-            backgroundColor: color
+            data,
+            backgroundColor
           }
         ]
       };
