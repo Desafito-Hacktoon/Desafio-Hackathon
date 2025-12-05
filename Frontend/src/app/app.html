@@ -1,4 +1,5 @@
 <z-layout class="h-screen w-full">
+  @if (!isAuthPage()) {
   <z-sidebar [zWidth]="256" class="!h-full !p-0 custom-sidebar">
     <div class="h-full flex flex-col gap-[1px]">
       <div class="px-4 h-[60px] flex items-center flex-shrink-0 bg-white rounded-br-lg">
@@ -84,8 +85,10 @@
       </div>
     </div>
   </z-sidebar>
+  }
 
   <div class="flex flex-col flex-1 min-w-0 overflow-hidden gap-[1px]">
+    @if (!isAuthPage()) {
     <z-header [zHeight]="60" class="!bg-white custom-header rounded-bl-lg">
       <div class="flex items-center justify-between px-4 w-full h-full">
         <div class="flex items-center gap-2 h-full">
@@ -103,8 +106,12 @@
         </div>
       </div>
     </z-header>
+    }
 
-    <z-content class="!bg-white !min-h-0 flex-1 overflow-hidden !p-0 rounded-tl-lg">
+    <z-content [class]="isAuthPage() ? 'auth-page !bg-transparent !min-h-0 flex-1 overflow-hidden !p-0 [&>main]:!p-0 [&>main]:!h-full [&>main]:!w-full' : '!bg-white !min-h-0 flex-1 overflow-hidden !p-0 rounded-tl-lg'">
+      @if (isAuthPage()) {
+      <router-outlet></router-outlet>
+      } @else {
       <div class="h-full w-full max-w-[1400px] rounded-tl-lg overflow-hidden">
         <div class="h-full overflow-auto">
           <div class="p-6">
@@ -112,6 +119,7 @@
           </div>
         </div>
       </div>
+      }
     </z-content>
   </div>
 </z-layout>

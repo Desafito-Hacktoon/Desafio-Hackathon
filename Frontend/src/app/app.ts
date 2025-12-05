@@ -39,6 +39,7 @@ export class App {
   protected readonly title = signal('heatMap-app');
   currentPageTitle = signal('Dashboard');
   currentPageIcon = signal<ZardIcon>('layout-dashboard');
+  isAuthPage = signal(false);
 
   private pageTitles: { [key: string]: string } = {
     '/dashboard': 'Dashboard',
@@ -92,11 +93,15 @@ export class App {
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: any) => {
         const url = event.urlAfterRedirects || event.url;
+        const urlWithoutQuery = url.split('?')[0];
+        this.isAuthPage.set(urlWithoutQuery === '/login' || urlWithoutQuery === '/register');
         this.currentPageTitle.set(this.getPageTitle(url));
         this.currentPageIcon.set(this.getPageIcon(url));
       });
 
     const currentUrl = this.router.url;
+    const urlWithoutQuery = currentUrl.split('?')[0];
+    this.isAuthPage.set(urlWithoutQuery === '/login' || urlWithoutQuery === '/singup');
     this.currentPageTitle.set(this.getPageTitle(currentUrl));
     this.currentPageIcon.set(this.getPageIcon(currentUrl));
   }
