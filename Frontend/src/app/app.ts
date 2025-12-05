@@ -38,7 +38,9 @@ export class App {
   private pageTitles: { [key: string]: string } = {
     '/dashboard': 'Dashboard',
     '/mapa': 'Mapa',
-    '/ocorrencias': 'Ocorrências'
+    '/ocorrencias': 'Ocorrências',
+    '/relatorios-ia': 'Relatórios IA',
+    '/insights-ia': 'Insights IA'
   };
 
   constructor(
