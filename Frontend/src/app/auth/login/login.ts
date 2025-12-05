@@ -2,13 +2,24 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../service/auth';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { ZardInputDirective } from '@shared/components/input/input.directive';
+import { ZardButtonComponent } from '@shared/components/button/button.component';
+import { ZardCardComponent } from '@shared/components/card/card.component';
+import { ZardIconComponent } from '@shared/components/icon/icon.component';
 
 @Component({
   selector: 'app-login',
-    imports: [
+  standalone: true,
+  imports: [
     FormsModule,
-    CommonModule
-    ],
+    CommonModule,
+    RouterLink,
+    ZardInputDirective,
+    ZardButtonComponent,
+    ZardCardComponent,
+    ZardIconComponent
+  ],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })

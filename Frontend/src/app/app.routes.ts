@@ -14,7 +14,7 @@ import {InsightGeneratorComponent} from './insights-ia/components/insight-genera
 
 export const routes: Routes = [
     { path: 'login', component: Login },
-    { path: 'singup', component: Singup },
+    { path: 'register', component: Singup },
     { path: 'mapa', component: LeafletMapComponent , canActivate: [authGuard] },
     { path: 'dashboard', component: Dashboard, canActivate: [authGuard] },
     { path: 'ocorrencias', component: Ocorrencias, canActivate: [authGuard] },

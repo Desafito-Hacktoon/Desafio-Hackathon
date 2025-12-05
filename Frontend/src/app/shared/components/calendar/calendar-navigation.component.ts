@@ -62,9 +62,10 @@ export class ZardCalendarNavigationComponent {
   protected readonly navClasses = computed(() => mergeClasses(calendarNavVariants()));
 
   protected readonly availableYears = computed(() => {
-    const currentYear = new Date().getFullYear();
+    const currentYear = Number.parseInt(this.currentYear()) || new Date().getFullYear();
     const years = [];
-    for (let i = currentYear - 10; i <= currentYear + 10; i++) {
+    // Ampliar o range para permitir navegação em mais anos
+    for (let i = currentYear - 50; i <= currentYear + 50; i++) {
       years.push(i);
     }
     return years;

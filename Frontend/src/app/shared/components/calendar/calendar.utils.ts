@@ -68,6 +68,10 @@ export function generateCalendarDays(config: CalendarDayConfig): CalendarDay[] {
       if (rangeStart && isSameDay(date, rangeStart)) {
         isRangeStart = true;
         isSelected = true;
+        // Se só tem uma data selecionada, mostrar como rangeStart
+        if (!rangeEnd) {
+          isRangeStart = true;
+        }
       }
       if (rangeEnd && isSameDay(date, rangeEnd)) {
         isRangeEnd = true;

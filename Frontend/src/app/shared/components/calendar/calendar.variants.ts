@@ -23,7 +23,7 @@ export const calendarDayButtonVariants = cva(
   {
     variants: {
       selected: {
-        true: 'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground',
+        true: 'bg-[#135ce4] text-white hover:bg-[#135ce4] hover:text-white focus:bg-[#135ce4] focus:text-white',
         false: '',
       },
       today: {
@@ -39,15 +39,15 @@ export const calendarDayButtonVariants = cva(
         false: '',
       },
       rangeStart: {
-        true: 'rounded-r-none bg-primary text-primary-foreground',
+        true: 'rounded-r-none bg-[#135ce4] text-white hover:bg-[#135ce4]',
         false: '',
       },
       rangeEnd: {
-        true: 'rounded-l-none bg-primary text-primary-foreground',
+        true: 'rounded-l-none bg-[#135ce4] text-white hover:bg-[#135ce4]',
         false: '',
       },
       inRange: {
-        true: 'rounded-none bg-accent hover:bg-accent',
+        true: 'rounded-none bg-[#135ce4]/20 hover:bg-[#135ce4]/30',
         false: '',
       },
     },
