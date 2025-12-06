@@ -137,7 +137,16 @@ public class PromptBuilder {
         prompt.append("  ],\n");
         prompt.append("  \"insights\": [\"lista de insights não óbvios que podem ser úteis\"]\n");
         prompt.append("}\n\n");
-        prompt.append("IMPORTANTE: Responda APENAS com o JSON válido, sem texto adicional antes ou depois.");
+        prompt.append("REGRAS CRÍTICAS DE FORMATAÇÃO:\n");
+        prompt.append("1. Responda APENAS com o JSON válido acima, sem nenhum texto antes ou depois\n");
+        prompt.append("2. NÃO inclua explicações, comentários ou texto adicional\n");
+        prompt.append("3. NÃO use markdown code blocks (```json ou ```)\n");
+        prompt.append("4. Todos os valores numéricos devem estar sem aspas\n");
+        prompt.append("5. Todos os valores de texto devem estar entre aspas duplas\n");
+        prompt.append("6. Certifique-se de que todas as chaves estão entre aspas duplas\n");
+        prompt.append("7. O JSON deve começar com { e terminar com }\n");
+        prompt.append("8. Valide que o JSON está completo e bem formado antes de enviar\n\n");
+        prompt.append("INÍCIO DA RESPOSTA (apenas JSON):");
 
         return prompt.toString();
     }
